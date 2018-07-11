@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    
+    <!--Background colors--> 
+    <Color x:Key="PrimaryBackgroundColor">#C4e3e1</Color>
+    <Color x:Key="NavigationBackgroundColor">#ffd035</Color>
+    
+    <!--Control Colors-->
+    <Color x:Key="ButtonColor">#0e9086</Color>
+    
+    <!--Modal Colors-->
+    <Color x:Key="InfoModalBackgroundColor">#9BC1BC</Color>
+    <Color x:Key="WarningModalBackgroundColor">#ED6A5A</Color>     
+
+    <!--Text Colors-->
+    <Color x:Key="OkTextColor">#0DB14B</Color>
+    <Color x:Key="NotOkTextColor">#ED2939</Color>
+    
+</ResourceDictionary>

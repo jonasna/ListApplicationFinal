@@ -1,4 +1,5 @@
 using System;
+using ListApplicationFinal.DataServices;
 using ListApplicationFinal.Pages;
 using ListApplicationFinal.ViewModels;
 using Prism;
@@ -18,17 +19,24 @@ namespace ListApplicationFinal
 
         protected override async void OnInitialized()
         {
-   
-
             InitializeComponent();
 
-
-            await NavigationService.NavigateAsync("NavigationPage/MainPage");
+            if(!ApplicationUserService.IsValid)
+            {
+                await NavigationService.NavigateAsync("LoginPage");
+            }
+            else
+            {
+                await NavigationService.NavigateAsync("NavigationPage/MainPage");
+            }
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterSingleton<IApplicationUserService, ApplicationUserService>();
+
             containerRegistry.RegisterForNavigation<NavigationPage>();
+            containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
         }
 

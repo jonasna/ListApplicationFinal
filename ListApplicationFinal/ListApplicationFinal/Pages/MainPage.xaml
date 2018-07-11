@@ -2,14 +2,15 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:ListApplicationFinal"
+             xmlns:forms="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
+             xmlns:markup="clr-namespace:ListApplicationFinal.Markup"
              x:Class="ListApplicationFinal.Pages.MainPage"
              Title="{Binding Title}">
 
     <StackLayout>
         <!-- Place new controls here -->
-    	<Label Text="Welcome to Xamarin.Forms!" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
+    	<Label Text="Welcome to Xamarin.Forms!"/>
+        <forms:SvgCachedImage Source="{markup:ImageResource button.svg}" WidthRequest="100" HeightRequest="100"/>
     </StackLayout>
 
 </ContentPage>

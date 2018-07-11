@@ -1,11 +1,13 @@
 ﻿using System;
-
+using Debug = System.Diagnostics.Debug;
 using Android.App;
 using Android.Content.PM;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Prism;
+using Prism.Ioc;
 
 namespace ListApplicationFinal.Droid
 {
@@ -20,7 +22,25 @@ namespace ListApplicationFinal.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
-            LoadApplication(new App());
+
+            try
+            {
+                LoadApplication(new App(new AndroidInitializer()));
+            }
+            catch (System.Exception e)
+            {
+                Debug.WriteLine(e);
+                throw;
+            }
+        }
+    }
+
+    public class AndroidInitializer : IPlatformInitializer
+    {
+        public void RegisterTypes(IContainerRegistry container)
+        {
+            // Register any platform specific implementations
+
         }
     }
 }

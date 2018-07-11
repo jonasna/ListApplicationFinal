@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:customControls="clr-namespace:ListApplicationFinal.CustomControls;assembly=ListApplicationFinal"
+             xmlns:forms="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
+             x:Class="ListApplicationFinal.CustomControls.Buttons.ImageButton"
+             Padding="0"
+             x:Name="Main">
+    <ContentView.Content>
+
+        <customControls:ClickableFrame
+            x:Name="Frame"
+            CornerRadius="{Binding Source={x:Reference Main}, Path=CornerRadius}"
+            Padding="{Binding Source={x:Reference Main}, Path=Padding}"
+            HasShadow="{Binding Source={x:Reference Main}, Path=HasShadow}"
+            WidthRequest="{Binding Source={x:Reference Image}, Path=Width}"
+            HeightRequest="{Binding Source={x:Reference Image}, Path=Height}"
+            HorizontalOptions="Center"
+            Clicked="ClickableFrame_Clicked"
+            Pressed="ClickableFrame_Pressed"
+            Released="ClickableFrame_Released">
+
+            <forms:SvgCachedImage x:Name="Image"
+                              Source="{Binding Source={x:Reference Main}, Path=Source}"
+                              Aspect="Fill"
+                              WidthRequest="{Binding Source={x:Reference Main}, Path=WidthRequest}"
+                              HeightRequest="{Binding Source={x:Reference Main}, Path=HeightRequest}"
+                              VerticalOptions="CenterAndExpand"
+                              HorizontalOptions="CenterAndExpand">
+            </forms:SvgCachedImage>
+        </customControls:ClickableFrame>
+
+    </ContentView.Content>
+</ContentView>

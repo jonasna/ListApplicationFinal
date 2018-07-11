@@ -4,13 +4,18 @@
              xmlns:local="clr-namespace:ListApplicationFinal"
              xmlns:forms="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
              xmlns:markup="clr-namespace:ListApplicationFinal.Markup"
+             xmlns:customcontrols="clr-namespace:ListApplicationFinal.CustomControls"
+             xmlns:buttons="clr-namespace:ListApplicationFinal.CustomControls.Buttons"
              x:Class="ListApplicationFinal.Pages.MainPage"
              Title="{Binding Title}">
 
     <StackLayout>
         <!-- Place new controls here -->
     	<Label Text="Welcome to Xamarin.Forms!"/>
-        <forms:SvgCachedImage Source="{markup:ImageResource button.svg}" WidthRequest="100" HeightRequest="100"/>
+
+        <buttons:ImageButton Source="{markup:ImageResource delete.svg}" WidthRequest="70" HeightRequest="70" CornerRadius="35"></buttons:ImageButton>
+        <buttons:ImageButton Source="{markup:ImageResource button.svg}" WidthRequest="150" HeightRequest="150" CornerRadius="75"></buttons:ImageButton>
+
     </StackLayout>
 
 </ContentPage>

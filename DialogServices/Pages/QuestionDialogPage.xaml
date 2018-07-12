@@ -25,13 +25,13 @@
                    Grid.Row="0"
                    FontSize="19"
                    FontAttributes="Bold"
-                   TextColor="DarkGray"/>
+                   TextColor="OrangeRed"/>
 
             <Label Text="{Binding Question}"
                    HorizontalOptions="CenterAndExpand"
                    VerticalOptions="CenterAndExpand"
                    Grid.Row="1"
-                   x:Name="Label"
+                   FontSize="16"
                    LineBreakMode="CharacterWrap"
                    Margin="8,-15,0,0"/>
 
@@ -49,6 +49,7 @@
                         Command="{Binding CancelCommand}"
                         Grid.Column="0"
                         x:Name="CancelButton"
+                        FontSize="16"
                         CornerRadius="10"/>
 
                 <Button Text="{Binding OkBtnText}"
@@ -58,6 +59,7 @@
                         Command="{Binding AcceptCommand}"
                         Grid.Column="1"
                         x:Name="AcceptButton"
+                        FontSize="16"
                         CornerRadius="10"/>
 
             </Grid>

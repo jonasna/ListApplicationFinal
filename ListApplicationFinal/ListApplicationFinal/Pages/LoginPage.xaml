@@ -65,6 +65,7 @@
                         HeightRequest="100"
                         CornerRadius="50"
                         BackgroundColor="{StaticResource ButtonColor}"
+                        TextColor="White"
                         Command="{Binding ClearCommand}"/>
 
                 <Button Grid.Column="1"
@@ -76,6 +77,7 @@
                         CornerRadius="50"
                         BorderWidth="5"
                         BackgroundColor="{StaticResource ButtonColor}"
+                        TextColor="White"
                         Command="{Binding SaveCommand}"/>
 
             </Grid>

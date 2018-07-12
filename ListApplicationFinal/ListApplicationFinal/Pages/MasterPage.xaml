@@ -11,6 +11,7 @@
                 <Button Text="Main"
                         VerticalOptions="StartAndExpand"
                         BackgroundColor="{StaticResource ButtonColor}"
+                        TextColor="White"
                         CornerRadius="10"
                         Command="{Binding NavigateCommand}"
                         CommandParameter="MainPage"/>
@@ -18,6 +19,7 @@
                 <Button Text="Settings"
                         VerticalOptions="EndAndExpand"
                         BackgroundColor="{StaticResource ButtonColor}"
+                        TextColor="White"
                         CornerRadius="10"
                         Command="{Binding NavigateCommand}"
                         CommandParameter="LoginPage"/>

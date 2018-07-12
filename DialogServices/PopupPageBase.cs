@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using DialogServices.Register;
-using Prism;
-using Rg.Plugins.Popup.Pages;
+﻿using Rg.Plugins.Popup.Pages;
 using Xamarin.Forms;
 
 namespace DialogServices

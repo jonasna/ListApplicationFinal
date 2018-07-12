@@ -45,13 +45,14 @@ namespace ListApplicationFinal
             containerRegistry.RegisterForNavigation<NavBarPage, NavBarPageViewModel>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
+            containerRegistry.RegisterForNavigation<ListsOverviewPage, ListsOverviewPageViewModel>();
             containerRegistry.RegisterForNavigation<MasterPage, MasterPageViewModel>(); // Master detail
 
-            var dialogConfig = new DialogConfiguration
+            var dialogConfig = new DialogConfigurationBuilder
             {
-                QuestionDialogBackgroundColor = Color.FromHex("#9BC1BC"), // (Color)Current.Resources["InfoModalBackgroundColor"],
-                AcceptButtonColor = Color.FromHex("#0DB14B"), //(Color)Current.Resources["OkTextColor"],
-                CancelButtonColor = Color.FromHex("#ED2939") //(Color)Current.Resources["NotOkTextColor"]
+                [DialogSetting.QuestionDialogBackgroundColor] = "InfoModalBackgroundColor",
+                [DialogSetting.AcceptButtonColor] = "OkTextColor",
+                [DialogSetting.CancelButtonColor] = "NotOkTextColor"
             };
 
             _containerRegistry.RegisterDialogServices(dialogConfig);

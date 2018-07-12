@@ -17,19 +17,23 @@ namespace DialogServices.Pages
 		{
 			InitializeComponent ();
 
-		    var config = (IDialogConfiguration)
-		        PrismApplicationBase.Current.Container.Resolve(typeof(IDialogConfiguration), "iDialogConfiguration");
+		    var config = (IDialogConfigurationBuilder)
+		        PrismApplicationBase.Current.Container.Resolve(typeof(IDialogConfigurationBuilder), "iDialogConfiguration");
 
-		    Frame.Padding = config.Padding;
-		    Frame.BackgroundColor = config.QuestionDialogBackgroundColor;
+		    if (config.GetResource<Color>(DialogSetting.QuestionDialogBackgroundColor, out var result))
+		    {
+		        Frame.BackgroundColor = result;
+		    }
 
-		    CancelButton.FontSize = config.ButtonTextSize;
-		    AcceptButton.FontSize = config.ButtonTextSize;
+		    if (config.GetResource<Color>(DialogSetting.CancelButtonColor, out result))
+		    {
+		        CancelButton.BackgroundColor = result;
+		    }
 
-		    CancelButton.BackgroundColor = config.CancelButtonColor;
-		    AcceptButton.BackgroundColor = config.AcceptButtonColor;
-
-		    Label.FontSize = config.DialogTextSize;
+		    if (config.GetResource<Color>(DialogSetting.AcceptButtonColor, out result))
+		    {
+		        AcceptButton.BackgroundColor = result;
+		    }
 		}
 	}
 }

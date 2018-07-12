@@ -3,10 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:prism="clr-namespace:Prism.Unity;assembly=Prism.Unity.Forms"
              x:Class="ListApplicationFinal.App">
-	<prism:PrismApplication.Resources>
+    <prism:PrismApplication.Resources>
 
-        <ResourceDictionary Source="ResourceDictionaries/ColorDictionary.xaml"/>
+                <ResourceDictionary Source="ResourceDictionaries/ColorDictionary.xaml"/>
 
     </prism:PrismApplication.Resources>
-
 </prism:PrismApplication>

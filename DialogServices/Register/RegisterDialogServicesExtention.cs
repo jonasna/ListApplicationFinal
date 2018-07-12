@@ -10,15 +10,15 @@ namespace DialogServices.Register
 {
     public static class RegisterDialogServicesExtention
     {
-        public static void RegisterDialogServices(this IContainerRegistry containerRegistry, IDialogConfiguration configuration = null)
+        public static void RegisterDialogServices(this IContainerRegistry containerRegistry, IDialogConfigurationBuilder configuration = null)
         {
 
-            configuration = configuration ?? new DialogConfiguration();
+            configuration = configuration ?? new DialogConfigurationBuilder();
 
             containerRegistry.RegisterPopupNavigationService();
 
             containerRegistry.RegisterSingleton<IDialogService, DialogService>();
-            containerRegistry.GetContainer().RegisterInstance(typeof(IDialogConfiguration), "iDialogConfiguration", configuration,
+            containerRegistry.GetContainer().RegisterInstance(typeof(IDialogConfigurationBuilder), "iDialogConfiguration", configuration,
                     new ContainerControlledLifetimeManager());
 
             containerRegistry.RegisterForNavigation<QuestionDialogPage, QuestionDialogPageViewModel>();

@@ -78,13 +78,13 @@ namespace ListApplicationFinal.ViewModels
             _applicationUserService.Name = Name;
             await _applicationUserService.SaveUserDataAsync();
 
-            if (_firstLoad)
+            if (FirstLoad)
                 await NavigationService.NavigateAsync("/MasterPage/NavBarPage/MainPage");
             else
             {
                 if (await _dialogService.QuestionDialog(
                     "Your settings have been saved succesfully. Would you like to navigate to main page?", "Question", "Yes", "No"))
-                    await NavigationService.NavigateAsync("MasterPage/NavBarPage/MainPage");
+                    await NavigationService.NavigateAsync("/MasterPage/NavBarPage/MainPage");
                 else
                 {
                     UpdateApplicationUserProperties();

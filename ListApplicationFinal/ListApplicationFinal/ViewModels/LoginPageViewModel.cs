@@ -2,24 +2,28 @@
 using System.Collections.ObjectModel;
 using ListApplicationFinal.DataServices;
 using ListApplicationFinal.ViewModels.Events;
+using ListApplicationFinal.ViewModels.Interfaces;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Navigation;
 
 namespace ListApplicationFinal.ViewModels
 {
-    public class LoginPageViewModel : VmBase, IConfirmNavigation
+    public class LoginPageViewModel : VmBase, IConfirmNavigation, INotifyPageNameChange
     {
         private const string SettingsSavedText = "Your settings have been saved";
         private const string SettingsNotSavedText = "Your settings have not been saved";
         private const string ErrorMsgText = "Fill out the form before continuing";
 
         private readonly IApplicationUserService _applicationUserService;
+        public bool ShouldNotify { get; set; } // INotifyPageName
 
-        public LoginPageViewModel(INavigationService navigationService, IEventAggregator eventAggregator, IApplicationUserService applicationUserService) 
-            : base(navigationService, eventAggregator)
+        public LoginPageViewModel(INavigationService navigationService, IApplicationUserService applicationUserService) 
+            : base(navigationService)
         {
             Title = "Login Page";
+            ShouldNotify = true;
+
             _applicationUserService = applicationUserService;           
         }
 
@@ -103,14 +107,13 @@ namespace ListApplicationFinal.ViewModels
             UpdateApplicationUserProperties();
         }
 
-        public override void OnNavigatedTo(INavigationParameters parameters)
+        protected override void ConfigureOnNavigatedTo(INavigationParameters parameters)
         {
             if (parameters.ContainsKey("FirstLoad"))
             {
                 FirstLoad = true;
             }
 
-            EmitCurrentPageNameEvent();
             UpdateApplicationUserProperties();
         }
 

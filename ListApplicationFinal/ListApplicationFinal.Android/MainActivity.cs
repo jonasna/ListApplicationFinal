@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Debug = System.Diagnostics.Debug;
 using Android.App;
 using Android.Content.PM;
@@ -8,12 +9,13 @@ using Android.Widget;
 using Android.OS;
 using FFImageLoading.Forms.Platform;
 using ListApplicationFinal.Droid.CustomRenderers;
+using ListApplicationFinal.Pages;
 using Prism;
 using Prism.Ioc;
 
 namespace ListApplicationFinal.Droid
 {
-    [Activity(Label = "ListApplicationFinal", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
+    [Activity(Label = "List App", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate(Bundle bundle)
@@ -28,6 +30,7 @@ namespace ListApplicationFinal.Droid
             CachedImageRenderer.Init(true);
             ClickableFrameRenderer.Init();
 
+
             try
             {
                 LoadApplication(new App(new AndroidInitializer()));
@@ -38,6 +41,7 @@ namespace ListApplicationFinal.Droid
                 throw;
             }
         }
+
     }
 
     public class AndroidInitializer : IPlatformInitializer
@@ -48,5 +52,6 @@ namespace ListApplicationFinal.Droid
 
         }
     }
+
 }
 

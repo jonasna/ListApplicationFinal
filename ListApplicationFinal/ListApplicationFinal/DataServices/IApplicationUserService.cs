@@ -8,5 +8,6 @@ namespace ListApplicationFinal.DataServices
         string Name { get; set; }
         bool IsValid { get; }
         Task SaveUserDataAsync();
+        Task ClearAsync();
     }
 }

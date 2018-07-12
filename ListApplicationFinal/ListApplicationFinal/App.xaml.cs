@@ -1,12 +1,13 @@
 using System;
-using ListApplicationFinal.DataServices;
-using ListApplicationFinal.Pages;
-using ListApplicationFinal.ViewModels;
 using Prism;
 using Prism.Ioc;
+using Prism.Navigation;
 using Prism.Unity;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using ListApplicationFinal.DataServices;
+using ListApplicationFinal.Pages;
+using ListApplicationFinal.ViewModels;
 
 [assembly: XamlCompilation (XamlCompilationOptions.Compile)]
 namespace ListApplicationFinal
@@ -23,11 +24,12 @@ namespace ListApplicationFinal
 
             if(!ApplicationUserService.IsValid)
             {
-                await NavigationService.NavigateAsync("LoginPage");
+                var firstLoadParams = new NavigationParameters {{"FirstLoad", null}};
+                await NavigationService.NavigateAsync("/LoginPage", firstLoadParams);
             }
             else
             {
-                await NavigationService.NavigateAsync("NavigationPage/MainPage");
+                await NavigationService.NavigateAsync("/MasterPage/NavBarPage/MainPage");
             }
         }
 
@@ -35,9 +37,10 @@ namespace ListApplicationFinal
         {
             containerRegistry.RegisterSingleton<IApplicationUserService, ApplicationUserService>();
 
-            containerRegistry.RegisterForNavigation<NavigationPage>();
+            containerRegistry.RegisterForNavigation<NavBarPage, NavBarPageViewModel>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
+            containerRegistry.RegisterForNavigation<MasterPage, MasterPageViewModel>(); // Master detail
         }
 
 

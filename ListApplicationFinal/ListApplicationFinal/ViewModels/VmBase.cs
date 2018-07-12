@@ -1,4 +1,7 @@
-﻿using Prism.Mvvm;
+﻿using System.Linq;
+using ListApplicationFinal.ViewModels.Events;
+using Prism.Events;
+using Prism.Mvvm;
 using Prism.Navigation;
 
 namespace ListApplicationFinal.ViewModels
@@ -13,10 +16,12 @@ namespace ListApplicationFinal.ViewModels
         }
 
         protected INavigationService NavigationService { get; }
+        protected IEventAggregator EventAggregator { get; }
 
-        protected VmBase(INavigationService navigationService)
+        public VmBase(INavigationService navigationService, IEventAggregator eventAggregator)
         {
             NavigationService = navigationService;
+            EventAggregator = eventAggregator;
         }
 
         public virtual void OnNavigatedFrom(INavigationParameters parameters)
@@ -26,7 +31,7 @@ namespace ListApplicationFinal.ViewModels
 
         public virtual void OnNavigatedTo(INavigationParameters parameters)
         {
-
+           
         }
 
         public virtual void OnNavigatingTo(INavigationParameters parameters)
@@ -37,6 +42,12 @@ namespace ListApplicationFinal.ViewModels
         public virtual void Destroy()
         {
 
+        }
+
+        protected void EmitCurrentPageNameEvent()
+        {
+            var currentPage = NavigationService.GetNavigationUriPath().Split(new[] { '/' }).Last();
+            EventAggregator.GetEvent<CurrentPageNameEvent>().Publish(currentPage);
         }
     }
 }

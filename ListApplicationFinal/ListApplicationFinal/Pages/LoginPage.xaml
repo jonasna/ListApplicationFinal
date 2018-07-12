@@ -1,9 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              xmlns:converters="clr-namespace:ListApplicationFinal.Converters;assembly=ListApplicationFinal"
-             prism:ViewModelLocator.AutowireViewModel="True"
              x:Class="ListApplicationFinal.Pages.LoginPage"
              BackgroundColor="{StaticResource PrimaryBackgroundColor}"
              Title="{Binding Title}">
@@ -13,16 +11,75 @@
     </ContentPage.Resources>
 
     <ContentPage.Content>
+        <Grid>
 
-        <StackLayout Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-            <Label Text="{Binding WelcomeText}"
-                   HorizontalOptions="CenterAndExpand"
-                   VerticalOptions="Center"
-                   FontSize="Large"
-                   TextColor="{Binding IsValid, Converter={StaticResource TxtColorConverter}}"/>
+            <StackLayout Grid.Row="0" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
 
-        </StackLayout>
+                <Label Text="{Binding WelcomeText}"
+                       HorizontalOptions="CenterAndExpand"
+                       VerticalOptions="EndAndExpand"
+                       FontSize="Large"
+                       FontAttributes="Bold"
+                       TextColor="{Binding IsValid, Converter={StaticResource TxtColorConverter}}"/>
 
+                <Label Margin="100, 0, 80, 20" HorizontalOptions="CenterAndExpand" VerticalOptions="EndAndExpand" LineBreakMode="CharacterWrap"  IsVisible="{Binding FirstLoad}">
+                    This page is shown to you as this appears to be the first time you open the application. Please fill out the following form.
+                </Label>
+
+            </StackLayout>
+
+            <StackLayout Grid.Row="1"  HorizontalOptions="FillAndExpand" VerticalOptions="Center">
+
+                <StackLayout Orientation="Horizontal" Margin="60,0,60,0">
+
+                    <Entry VerticalOptions="Center" HorizontalOptions="FillAndExpand" Placeholder="Name" Text="{Binding Name}" FontSize="20"></Entry>
+
+                </StackLayout>
+
+                <StackLayout Orientation="Horizontal" Margin="60,10,60,0">
+
+                    <Entry VerticalOptions="Center" HorizontalOptions="FillAndExpand" Placeholder="Display name" Text="{Binding DisplayName}" FontSize="20"></Entry>
+
+                </StackLayout>
+
+            </StackLayout>
+
+            <Grid Grid.Row="2">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0"
+                        Text="Clear"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        WidthRequest="100"
+                        HeightRequest="100"
+                        CornerRadius="50"
+                        BackgroundColor="{StaticResource ButtonColor}"
+                        Command="{Binding ClearCommand}"/>
+
+                <Button Grid.Column="1"
+                        Text="Save"
+                        VerticalOptions="Center"
+                        HorizontalOptions="Center"
+                        WidthRequest="100"
+                        HeightRequest="100"
+                        CornerRadius="50"
+                        BorderWidth="5"
+                        BackgroundColor="{StaticResource ButtonColor}"
+                        Command="{Binding SaveCommand}"/>
+
+            </Grid>
+
+        </Grid>
     </ContentPage.Content>
 </ContentPage>

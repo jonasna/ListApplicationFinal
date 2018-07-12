@@ -7,6 +7,7 @@
              xmlns:customcontrols="clr-namespace:ListApplicationFinal.CustomControls"
              xmlns:buttons="clr-namespace:ListApplicationFinal.CustomControls.Buttons"
              x:Class="ListApplicationFinal.Pages.MainPage"
+             BackgroundColor="{StaticResource PrimaryBackgroundColor}"
              Title="{Binding Title}">
 
     <StackLayout>

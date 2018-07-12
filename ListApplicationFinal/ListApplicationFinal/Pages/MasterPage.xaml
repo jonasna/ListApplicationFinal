@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+                  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                  x:Class="ListApplicationFinal.Pages.MasterPage"
+                  >
+
+    <MasterDetailPage.Master>
+        <ContentPage Title="Menu" BackgroundColor="{StaticResource NavigationBackgroundColor}">
+            <StackLayout Padding="80" VerticalOptions="FillAndExpand">
+ 
+                <Button Text="Main"
+                        VerticalOptions="StartAndExpand"
+                        BackgroundColor="{StaticResource ButtonColor}"
+                        CornerRadius="10"
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="MainPage"/>
+
+                <Button Text="Settings"
+                        VerticalOptions="EndAndExpand"
+                        BackgroundColor="{StaticResource ButtonColor}"
+                        CornerRadius="10"
+                        Command="{Binding NavigateCommand}"
+                        CommandParameter="LoginPage"/>
+
+            </StackLayout>
+        </ContentPage>
+    </MasterDetailPage.Master>
+    
+</MasterDetailPage>

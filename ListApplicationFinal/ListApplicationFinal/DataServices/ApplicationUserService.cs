@@ -57,6 +57,12 @@ namespace ListApplicationFinal.DataServices
             await Application.Current.SavePropertiesAsync();
         }
 
+        public async Task ClearAsync()
+        {
+            Application.Current.Properties.Clear();
+            await Application.Current.SavePropertiesAsync();
+        }
+
         public static bool IsValid => Application.Current.Properties.ContainsKey("DisplayName") &&
                                       Application.Current.Properties.ContainsKey("Name");
       

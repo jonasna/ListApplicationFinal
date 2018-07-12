@@ -26,6 +26,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\DialogServices\DialogServices.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Pages\MasterPage.xaml.cs">
       <DependentUpon>MasterPage.xaml</DependentUpon>
     </Compile>

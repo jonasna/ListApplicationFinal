@@ -23,6 +23,8 @@ namespace ListApplicationFinal.Droid
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
 
+            Rg.Plugins.Popup.Popup.Init(this, bundle);
+
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
@@ -39,6 +41,18 @@ namespace ListApplicationFinal.Droid
             {
                 Debug.WriteLine(e);
                 throw;
+            }
+        }
+
+        public override void OnBackPressed()
+        {
+            if (Rg.Plugins.Popup.Popup.SendBackPressed(base.OnBackPressed))
+            {
+
+            }
+            else
+            {
+
             }
         }
 

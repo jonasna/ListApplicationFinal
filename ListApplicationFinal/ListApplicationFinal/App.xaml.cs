@@ -1,13 +1,13 @@
-using System;
 using Prism;
 using Prism.Ioc;
 using Prism.Navigation;
 using Prism.Unity;
-using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ListApplicationFinal.DataServices;
 using ListApplicationFinal.Pages;
 using ListApplicationFinal.ViewModels;
+using DialogServices.Register;
+using Xamarin.Forms;
 
 [assembly: XamlCompilation (XamlCompilationOptions.Compile)]
 namespace ListApplicationFinal
@@ -18,11 +18,13 @@ namespace ListApplicationFinal
 
         public App(IPlatformInitializer initializer) : base(initializer) { }
 
+        private IContainerRegistry _containerRegistry;
+
         protected override async void OnInitialized()
         {
             InitializeComponent();
 
-            if(!ApplicationUserService.IsValid)
+            if (!ApplicationUserService.IsValid)
             {
                 var firstLoadParams = new NavigationParameters {{"FirstLoad", null}};
                 await NavigationService.NavigateAsync("/LoginPage", firstLoadParams);
@@ -31,16 +33,28 @@ namespace ListApplicationFinal
             {
                 await NavigationService.NavigateAsync("/MasterPage/NavBarPage/MainPage");
             }
+
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            _containerRegistry = containerRegistry;
+
             containerRegistry.RegisterSingleton<IApplicationUserService, ApplicationUserService>();
 
             containerRegistry.RegisterForNavigation<NavBarPage, NavBarPageViewModel>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
             containerRegistry.RegisterForNavigation<MasterPage, MasterPageViewModel>(); // Master detail
+
+            var dialogConfig = new DialogConfiguration
+            {
+                QuestionDialogBackgroundColor = Color.FromHex("#9BC1BC"), // (Color)Current.Resources["InfoModalBackgroundColor"],
+                AcceptButtonColor = Color.FromHex("#0DB14B"), //(Color)Current.Resources["OkTextColor"],
+                CancelButtonColor = Color.FromHex("#ED2939") //(Color)Current.Resources["NotOkTextColor"]
+            };
+
+            _containerRegistry.RegisterDialogServices(dialogConfig);
         }
 
 

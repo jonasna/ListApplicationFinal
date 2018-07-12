@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using DialogServices.Service;
 using ListApplicationFinal.DataServices;
 using ListApplicationFinal.ViewModels.Events;
 using ListApplicationFinal.ViewModels.Interfaces;
@@ -16,15 +17,19 @@ namespace ListApplicationFinal.ViewModels
         private const string ErrorMsgText = "Fill out the form before continuing";
 
         private readonly IApplicationUserService _applicationUserService;
+        private readonly IDialogService _dialogService;
         public bool ShouldNotify { get; set; } // INotifyPageName
 
-        public LoginPageViewModel(INavigationService navigationService, IApplicationUserService applicationUserService) 
+        public LoginPageViewModel(INavigationService navigationService,
+            IApplicationUserService applicationUserService,
+            IDialogService dialogService) 
             : base(navigationService)
         {
             Title = "Login Page";
             ShouldNotify = true;
 
-            _applicationUserService = applicationUserService;           
+            _applicationUserService = applicationUserService;
+            _dialogService = dialogService;
         }
 
         private bool _firstLoad = false;
@@ -65,7 +70,7 @@ namespace ListApplicationFinal.ViewModels
         private DelegateCommand _saveCommand;
         public DelegateCommand SaveCommand =>
             _saveCommand ?? (_saveCommand = new DelegateCommand(ExecuteSaveCommand, CanExecuteSaveCommand)).
-            ObservesProperty(() => Name).ObservesProperty(() => DisplayName).ObservesProperty(() => IsValid);
+            ObservesProperty(() => Name).ObservesProperty(() => DisplayName);
 
         private async void ExecuteSaveCommand()
         {
@@ -76,8 +81,15 @@ namespace ListApplicationFinal.ViewModels
             if (_firstLoad)
                 await NavigationService.NavigateAsync("/MasterPage/NavBarPage/MainPage");
             else
-                UpdateApplicationUserProperties();
-
+            {
+                if (await _dialogService.QuestionDialog(
+                    "Your settings have been saved succesfully. Would you like to navigate to main page?", "Question", "Yes", "No"))
+                    await NavigationService.NavigateAsync("MasterPage/NavBarPage/MainPage");
+                else
+                {
+                    UpdateApplicationUserProperties();
+                }
+            }
         }
 
         private bool CanExecuteSaveCommand()
@@ -88,13 +100,19 @@ namespace ListApplicationFinal.ViewModels
             if (string.IsNullOrWhiteSpace(DisplayName))
                 return false;
 
-            if (DisplayName == _applicationUserService.DisplayName)
+            if (DisplayName == _applicationUserService.DisplayName && Name == _applicationUserService.Name)
+            {
+                WelcomeText = SettingsSavedText;
+                IsValid = true;
                 return false;
+            }
+            else
+            {
+                WelcomeText = SettingsNotSavedText;
+                IsValid = false;
+                return true;
+            }
 
-            if (Name == _applicationUserService.Name)
-                return false;
-
-            return true;
         }
 
         private DelegateCommand _clearCommand;
@@ -117,22 +135,25 @@ namespace ListApplicationFinal.ViewModels
             UpdateApplicationUserProperties();
         }
 
+        public bool CanNavigate(INavigationParameters parameters)
+        {
+            if (!_applicationUserService.IsValid)
+            {
+                WelcomeText = ErrorMsgText;
+                IsValid = _applicationUserService.IsValid;
+            }
+
+            return _applicationUserService.IsValid;
+        }
+
         private void UpdateApplicationUserProperties()
         {
             IsValid = _applicationUserService.IsValid;
             WelcomeText = IsValid ? SettingsSavedText : SettingsNotSavedText;
             Name = _applicationUserService.Name;
             DisplayName = _applicationUserService.DisplayName;
-        }
 
-        public bool CanNavigate(INavigationParameters parameters)
-        {
-            if (!_applicationUserService.IsValid)
-            {
-                WelcomeText = ErrorMsgText;
-            }
-
-            return _applicationUserService.IsValid;
+            SaveCommand.RaiseCanExecuteChanged();
         }
     }
 }

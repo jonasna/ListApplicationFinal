@@ -55,11 +55,6 @@ namespace ListApplicationFinal.Dispatcher
             QueueActions.Add(subscribtion);
         }
 
-        public static void Init()
-        {
-            if (!DispatcherThread.IsAlive)
-                DispatcherThread.Start();
-        }
     }
 
     internal struct DispatcherSubscribtion

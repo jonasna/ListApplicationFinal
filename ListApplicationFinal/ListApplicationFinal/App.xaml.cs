@@ -24,9 +24,6 @@ namespace ListApplicationFinal
         {
             InitializeComponent();
 
-            Dispatcher.Dispatcher.Init();
-            DependencyExtensions.GetDependency<ITodoService>();
-
             if (!ApplicationUserService.IsValid)
             {
                 var firstLoadParams = new NavigationParameters {{"FirstLoad", null}};

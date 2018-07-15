@@ -56,6 +56,24 @@ namespace DialogServices.ViewModels
             SetCompleted(false);
         }
 
+        private DelegateCommand _onBackBtnPressedCommand;
+        public DelegateCommand OnBackBtnPressedCommand =>
+            _onBackBtnPressedCommand ?? (_onBackBtnPressedCommand = new DelegateCommand(ExecuteOnBackBtnPressedCommand));
+
+        private void ExecuteOnBackBtnPressedCommand()
+        {
+            SetCompleted(false);
+        }
+
+        private DelegateCommand _onBackgroundPressedCommand;        
+        public DelegateCommand OnBackgroundPressedCommand =>
+            _onBackgroundPressedCommand ?? (_onBackgroundPressedCommand = new DelegateCommand(ExecuteOnBackgroundPressedCommand));
+
+        private void ExecuteOnBackgroundPressedCommand()
+        {
+            SetCompleted(false);
+        }
+
         protected override void ConfigureOnLoad(INavigationParameters parameters)
         {
             Question = (string) parameters["Question"];
@@ -63,5 +81,6 @@ namespace DialogServices.ViewModels
             OkBtnText = (string) parameters["OkBtnText"];
             NotOkBtnText = (string) parameters["NotOkBtnText"];
         }
+
     }
 }

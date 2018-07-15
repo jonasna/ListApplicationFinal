@@ -22,7 +22,7 @@
 
             <forms:SvgCachedImage x:Name="Image"
                               Source="{Binding Source={x:Reference Main}, Path=Source}"
-                              Aspect="Fill"
+                              Aspect="AspectFit"
                               WidthRequest="{Binding Source={x:Reference Main}, Path=WidthRequest}"
                               HeightRequest="{Binding Source={x:Reference Main}, Path=HeightRequest}"
                               VerticalOptions="CenterAndExpand"

@@ -2,7 +2,9 @@
 <dialogServices:PopupPageBase xmlns:dialogServices="clr-namespace:DialogServices;assembly=DialogServices"
                               xmlns="http://xamarin.com/schemas/2014/forms" 
                               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                              x:Class="DialogServices.Pages.QuestionDialogPage">
+                              x:Class="DialogServices.Pages.QuestionDialogPage"
+                              BackBtnPressedCommand="{Binding OnBackBtnPressedCommand}"
+                              BackGroundPressedCommand="{Binding OnBackgroundPressedCommand}">
 
     <Frame HorizontalOptions="Center"
            VerticalOptions="Center"

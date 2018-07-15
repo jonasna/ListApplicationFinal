@@ -21,11 +21,9 @@ namespace ListApplicationFinal.Domain
             get => _name;
             set
             {
-                if (_name != value)
-                {
-                    _name = value;
-                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(Name)));
-                }
+                if (_name == value) return;
+                _name = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Name)));
             }
         }
 
@@ -49,11 +47,9 @@ namespace ListApplicationFinal.Domain
             get => _pointOfCreation;
             set
             {
-                if (_pointOfCreation != value)
-                {
-                    _pointOfCreation = value;
-                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(PointOfCreation)));
-                }
+                if (_pointOfCreation == value) return;
+                _pointOfCreation = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(PointOfCreation)));
             }
         }
 
@@ -63,12 +59,10 @@ namespace ListApplicationFinal.Domain
             get => _id;
             set
             {
-                if (_id != value)
-                {
-                    _id = value;
-                    OnPropertyChanged(new PropertyChangedEventArgs(nameof(Id)));
-                }
+                if (_id == value) return;
+                _id = value;
+                OnPropertyChanged(new PropertyChangedEventArgs(nameof(Id)));
             }
-        }
+        }      
     }
 }

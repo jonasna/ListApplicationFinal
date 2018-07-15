@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Navigation;
@@ -18,7 +19,11 @@ namespace ListApplicationFinal.ViewModels
 
         private async void ExecuteNavigateCommand(string uri)
         {
-            await NavigationService.NavigateAsync(new Uri(uri, UriKind.Relative));
+            var result = await NavigationService.NavigateAsync(new Uri(uri, UriKind.Relative));
+            if (result.Exception != null)
+            {
+                Debug.WriteLine(result.Exception);
+            }
         }
     }
 }

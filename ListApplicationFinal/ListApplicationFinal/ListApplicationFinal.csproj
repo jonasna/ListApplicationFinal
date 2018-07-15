@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\add.svg" />
     <None Remove="Images\button.svg" />
     <None Remove="Images\delete.svg" />
     <None Remove="Images\eye.svg" />
@@ -14,11 +15,14 @@
     <EmbeddedResource Include="Images\button.svg" />
     <EmbeddedResource Include="Images\delete.svg" />
     <EmbeddedResource Include="Images\eye.svg" />
+    <EmbeddedResource Include="Images\add.svg" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AiForms.Layouts" Version="1.1.0" />
     <PackageReference Include="Prism.Unity.Forms" Version="7.1.0.172-pre" />
+    <PackageReference Include="Syncfusion.Licensing" Version="16.2.0.42" />
+    <PackageReference Include="Syncfusion.Xamarin.SfListView" Version="16.2.0.42" />
     <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.3.840" />
     <PackageReference Include="Xamarin.FFImageLoading.Svg.Forms" Version="2.4.3.840" />
     <PackageReference Include="Xamarin.FFImageLoading.Transformations" Version="2.4.3.840" />

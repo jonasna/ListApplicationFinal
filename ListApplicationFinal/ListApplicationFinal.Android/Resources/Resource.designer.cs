@@ -26,6 +26,9 @@ namespace ListApplicationFinal.Droid
 		
 		public static void UpdateIdValues()
 		{
+			global::Syncfusion.ListView.XForms.Android.Resource.String.ApplicationName = global::ListApplicationFinal.Droid.Resource.String.ApplicationName;
+			global::Syncfusion.ListView.XForms.Android.Resource.String.Hello = global::ListApplicationFinal.Droid.Resource.String.Hello;
+			global::Syncfusion.ListView.XForms.Android.Resource.String.Load_More = global::ListApplicationFinal.Droid.Resource.String.Load_More;
 			global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::ListApplicationFinal.Droid.Resource.Attribute.actionBarSize;
 		}
 		
@@ -3961,6 +3964,15 @@ namespace ListApplicationFinal.Droid
 		
 		public partial class String
 		{
+			
+			// aapt resource value: 0x7f0a003d
+			public const int ApplicationName = 2131361853;
+			
+			// aapt resource value: 0x7f0a003c
+			public const int Hello = 2131361852;
+			
+			// aapt resource value: 0x7f0a003e
+			public const int Load_More = 2131361854;
 			
 			// aapt resource value: 0x7f0a0015
 			public const int abc_action_bar_home_description = 2131361813;

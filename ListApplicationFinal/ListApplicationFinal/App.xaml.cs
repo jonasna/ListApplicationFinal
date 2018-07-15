@@ -24,6 +24,9 @@ namespace ListApplicationFinal
         {
             InitializeComponent();
 
+            Dispatcher.Dispatcher.Init();
+            DependencyExtensions.GetDependency<ITodoService>();
+
             if (!ApplicationUserService.IsValid)
             {
                 var firstLoadParams = new NavigationParameters {{"FirstLoad", null}};
@@ -41,6 +44,7 @@ namespace ListApplicationFinal
             _containerRegistry = containerRegistry;
 
             containerRegistry.RegisterSingleton<IApplicationUserService, ApplicationUserService>();
+            containerRegistry.RegisterSingleton<ITodoService, TodoService>();
 
             containerRegistry.RegisterForNavigation<NavBarPage, NavBarPageViewModel>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();

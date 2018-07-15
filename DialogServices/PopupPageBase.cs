@@ -1,4 +1,5 @@
-﻿using Rg.Plugins.Popup.Pages;
+﻿using System.Windows.Input;
+using Rg.Plugins.Popup.Pages;
 using Xamarin.Forms;
 
 namespace DialogServices
@@ -25,6 +26,9 @@ namespace DialogServices
         protected override bool OnBackButtonPressed()
         {
             // Prevent back button pressed action on android
+
+            BackBtnPressedCommand?.Execute(null);
+
             return true;
         }
 
@@ -32,7 +36,25 @@ namespace DialogServices
         protected override bool OnBackgroundClicked()
         {
             // Prevent background clicked action
+
+            BackGroundPressedCommand?.Execute(null);
+
             return false;
+        }
+
+        public static BindableProperty BackBtnPressedCommandProperty = BindableProperty.Create(nameof(BackBtnPressedCommand), typeof(ICommand), typeof(PopupPageBase), null);
+        public static BindableProperty BackGroundPressedCommandProperty = BindableProperty.Create(nameof(BackGroundPressedCommand), typeof(ICommand), typeof(PopupPageBase), null);
+
+        public ICommand BackBtnPressedCommand
+        {
+            set => SetValue(BackBtnPressedCommandProperty, value);
+            get => (ICommand) GetValue(BackBtnPressedCommandProperty);
+        }
+
+        public ICommand BackGroundPressedCommand
+        {
+            set => SetValue(BackGroundPressedCommandProperty, value);
+            get => (ICommand)GetValue(BackGroundPressedCommandProperty);
         }
 
     }

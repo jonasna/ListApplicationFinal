@@ -30,9 +30,7 @@ namespace ListApplicationFinal.CustomControls.Buttons
 
 	    public static readonly BindableProperty HasShadowProperty = BindableProperty.Create(nameof(HasShadow), typeof(bool), typeof(Frame), true);
 
-	    public static readonly BindableProperty IsDisabledProperty = BindableProperty.Create(nameof(IsDisabled), typeof(bool), typeof(ImageButton), false, propertyChanged: OnDisabledChanged);
-
-	    public static readonly BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ImageButton), null);
+	    public static readonly BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ImageButton), null, BindingMode.Default, null, CommandPropertyChanged);
 
 	    public static readonly BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(ImageButton), null);
 
@@ -54,12 +52,6 @@ namespace ListApplicationFinal.CustomControls.Buttons
 	        set => SetValue(HasShadowProperty, value);
 	    }
 
-	    public bool IsDisabled
-	    {
-	        get => (bool)GetValue(IsDisabledProperty);
-	        set => SetValue(IsDisabledProperty, value);
-	    }
-
 	    public ICommand Command
 	    {
 	        get => (ICommand)GetValue(CommandProperty);
@@ -72,41 +64,24 @@ namespace ListApplicationFinal.CustomControls.Buttons
 	        set => SetValue(CommandParameterProperty, value);
 	    }
 
-	    private static void OnDisabledChanged(BindableObject bindable, object oldValue, object newValue)
-	    {
-	        var btn = (bindable as ImageButton);
-
-	        try
-	        {
-	            var img = btn.Image;
-	            img.Transformations = new List<ITransformation> { };
-	            if (btn.IsDisabled)
-	            {
-	                img.Transformations = new List<ITransformation> { new ColorSpaceTransformation(FFColorMatrix.GrayscaleColorMatrix) };
-	            }
-	        }
-	        catch (System.Exception ex)
-	        {
-	            System.Diagnostics.Debug.WriteLine(ex);
-	        }
-	    }
-
-	    private void TransitionDown()
+	    private static async Task TransitionDown(ImageButton button)
 	    {
 	        try
 	        {
-	            Image.Transformations = new List<ITransformation> { new ColorSpaceTransformation(FFColorMatrix.PolaroidColorMatrix) };
+	            button.Image.Transformations = new List<ITransformation> { new ColorSpaceTransformation(FFColorMatrix.PolaroidColorMatrix) };
+	            await button.Frame.ScaleTo(0.9, 50, Easing.Linear);
 	        }
 	        catch
 	        {
 	            // nothing to do
 	        }
         }
-        private void TransitionUp()
+        private static async Task TransitionUp(ImageButton button)
         {
             try
             {
-                Image.Transformations = new List<ITransformation> { };
+                button.Image.Transformations = new List<ITransformation> { };
+                await button.Frame.ScaleTo(1, 50, Easing.Linear);
             }
             catch
             {
@@ -120,24 +95,77 @@ namespace ListApplicationFinal.CustomControls.Buttons
 
         private void ClickableFrame_Clicked(object sender, EventArgs e)
         {
-            if (IsDisabled) return;
-            Clicked?.Invoke(this, EventArgs.Empty);
             Command?.Execute(CommandParameter);
+            Clicked?.Invoke(this, EventArgs.Empty);
         }
 
-        private void ClickableFrame_Pressed(object sender, EventArgs e)
+        private async void ClickableFrame_Pressed(object sender, EventArgs e)
         {
-            if (IsDisabled) return;
-            TransitionDown();
+            await TransitionDown(this);
             Pressed?.Invoke(this, EventArgs.Empty);
         }
 
-        private void ClickableFrame_Released(object sender, EventArgs e)
+        private async void ClickableFrame_Released(object sender, EventArgs e)
         {
-            if (IsDisabled) return;
-            TransitionUp();
+            await TransitionUp(this);
             Released?.Invoke(this, EventArgs.Empty);
         }
 
-    }
+	    private static void CommandPropertyChanged(BindableObject bindable, object oldvalue, object newvalue)
+	    {
+	        var btn = (ImageButton)bindable;
+	        if (btn == null)
+	            return;
+
+	        if (oldvalue != null)
+	        {
+	            var cmd = (ICommand)oldvalue;
+	            cmd.CanExecuteChanged -= btn.CmdOnCanExecuteChanged;
+	        }
+
+	        if (newvalue != null)
+	        {
+	            var cmd = (ICommand)newvalue;
+	            cmd.CanExecuteChanged += btn.CmdOnCanExecuteChanged;
+	            SetButton(btn, cmd);
+	        }
+	    }
+
+	    private void CmdOnCanExecuteChanged(object sender, EventArgs e)
+	    {
+	        var cmd = (ICommand)sender;
+	        if (cmd != null)
+	        {
+	            SetButton(this, cmd);
+	        }
+	    }
+
+	    private static void SetButton(ImageButton imageButton, ICommand command)
+	    {
+	        try
+	        {
+	            imageButton.IsEnabled = command.CanExecute(null);
+	            var image = imageButton.Image;
+	            image.Transformations = NoTransformation;
+	            if (!imageButton.IsEnabled)
+	            {
+	                image.Transformations = Transformation;
+	            }
+	        }
+	        catch (Exception e)
+	        {
+	            System.Diagnostics.Debug.WriteLine(e);
+	        }
+	    }
+
+	    private static readonly List<ITransformation> NoTransformation;
+	    private static readonly List<ITransformation> Transformation;
+
+	    static ImageButton()
+	    {
+            Transformation = new List<ITransformation>{ new ColorSpaceTransformation(FFColorMatrix.GrayscaleColorMatrix) };
+            NoTransformation = new List<ITransformation>();
+	    }
+
+	}
 }

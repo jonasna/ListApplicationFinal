@@ -11,11 +11,6 @@ namespace ListApplicationFinal.ViewModels
 {
     public class VmBase : BindableBase, INavigationAware, IDestructible
     {
-        private static T GetDependency<T>()
-        { 
-            return Application.Current.Container.Resolve<T>();
-        }
-
         protected INavigationService NavigationService { get; }
 
         public VmBase(INavigationService navigationService)
@@ -58,9 +53,9 @@ namespace ListApplicationFinal.ViewModels
 
         public void Destroy()
         {
-            if (this is IHandlePageNameChange pageHandler)
+            if (this is IHandlePageNameChange)
             {
-                UnSubscribeHandlerToPageNameEvent(pageHandler);
+                UnSubscribeHandlerToPageNameEvent();
             }
 
             ConfigureDestroy();
@@ -82,21 +77,21 @@ namespace ListApplicationFinal.ViewModels
 
         #region PageName Event
 
+        private IEventAggregator _eventAggregator => DependencyExtensions.GetDependency<IEventAggregator>();
+
         private SubscriptionToken _subscriptionToken = null;
         private void EmitCurrentPageNameEvent()
         {
             var currentPage = NavigationService.GetNavigationUriPath().Split('/').Last();
-            GetDependency<IEventAggregator>().GetEvent<CurrentPageNameEvent>().Publish(currentPage);
+            _eventAggregator.GetEvent<CurrentPageNameEvent>().Publish(currentPage);
         }
         private void SubscribeHandlerToPageNameEvent(IHandlePageNameChange pageHandler)
         {
-            _subscriptionToken = GetDependency<IEventAggregator>().GetEvent<CurrentPageNameEvent>()
-                .Subscribe(pageHandler.HandlePageNameChange);
+            _subscriptionToken = _eventAggregator.GetEvent<CurrentPageNameEvent>().Subscribe(pageHandler.HandlePageNameChange);
         }
-        private void UnSubscribeHandlerToPageNameEvent(IHandlePageNameChange pageHandler)
+        private void UnSubscribeHandlerToPageNameEvent()
         {
-            GetDependency<IEventAggregator>().GetEvent<CurrentPageNameEvent>()
-                .Unsubscribe(_subscriptionToken);
+            _eventAggregator.GetEvent<CurrentPageNameEvent>().Unsubscribe(_subscriptionToken);
         }
 
         #endregion

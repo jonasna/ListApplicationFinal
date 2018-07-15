@@ -24,6 +24,8 @@ namespace ListApplicationFinal.Droid
             ToolbarResource = Resource.Layout.Toolbar;
 
             Rg.Plugins.Popup.Popup.Init(this, bundle);
+            
+            // License here
 
             base.OnCreate(bundle);
 

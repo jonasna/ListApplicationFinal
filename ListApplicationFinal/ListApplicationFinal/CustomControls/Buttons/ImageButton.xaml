@@ -12,22 +12,22 @@
             x:Name="Frame"
             CornerRadius="{Binding Source={x:Reference Main}, Path=CornerRadius}"
             Padding="{Binding Source={x:Reference Main}, Path=Padding}"
-            HasShadow="{Binding Source={x:Reference Main}, Path=HasShadow}"
-            WidthRequest="{Binding Source={x:Reference Image}, Path=Width}"
-            HeightRequest="{Binding Source={x:Reference Image}, Path=Height}"
-            HorizontalOptions="Center"
+            HasShadow="{Binding Source={x:Reference Main}, Path=HasShadow}"            
             Clicked="ClickableFrame_Clicked"
             Pressed="ClickableFrame_Pressed"
             Released="ClickableFrame_Released">
 
             <forms:SvgCachedImage x:Name="Image"
-                              Source="{Binding Source={x:Reference Main}, Path=Source}"
-                              Aspect="AspectFit"
-                              WidthRequest="{Binding Source={x:Reference Main}, Path=WidthRequest}"
-                              HeightRequest="{Binding Source={x:Reference Main}, Path=HeightRequest}"
-                              VerticalOptions="CenterAndExpand"
-                              HorizontalOptions="CenterAndExpand">
+                                  Source="{Binding Source={x:Reference Main}, Path=Source}"
+                                  Aspect="AspectFit"
+                                  WidthRequest="{Binding Source={x:Reference Main}, Path=WidthRequest}"
+                                  HeightRequest="{Binding Source={x:Reference Main}, Path=HeightRequest}"
+                                  MinimumWidthRequest="{Binding Source={x:Reference Main}, Path=WidthRequest}"
+                                  MinimumHeightRequest="{Binding Source={x:Reference Main}, Path=HeightRequest}"
+                                  VerticalOptions="CenterAndExpand"
+                                  HorizontalOptions="CenterAndExpand">
             </forms:SvgCachedImage>
+
         </customControls:ClickableFrame>
 
     </ContentView.Content>

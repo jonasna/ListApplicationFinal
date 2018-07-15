@@ -1,14 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Runtime.InteropServices.ComTypes;
-using System.Threading;
+﻿using System.Collections.ObjectModel;
 using ListApplicationFinal.DataServices;
 using ListApplicationFinal.Domain;
 using Prism.Commands;
 using Prism.Navigation;
-using Prism.Unity;
-using Xamarin.Forms;
+using ListApplicationFinal.Threading;
 
 namespace ListApplicationFinal.ViewModels
 {
@@ -80,21 +75,21 @@ namespace ListApplicationFinal.ViewModels
         }
 
         protected override void ConfigureOnNavigatedTo(INavigationParameters parameters)
-        {
-            Dispatcher.Dispatcher.RunOnGui(
-                o =>
-                {
-                    var col = (ICollection<TodoList>) o;
-                    ListCollection = new ObservableCollection<TodoList>(col);
-                },
-                s =>
+        {           
+            Dispatcher.BeginInvoke(
+                () =>
                 {
                     return _todoService.GetAllLists();
-                }, 
-                s =>
+
+                }, collection =>
+                {
+                    ListCollection = new ObservableCollection<TodoList>(collection);
+                    return null;
+                }, (o) =>
                 {
                     CheckSelectedItem(true);
-                });      
+                });
         }
+
     }
 }

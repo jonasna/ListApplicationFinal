@@ -30,9 +30,13 @@ namespace ListApplicationFinal.CustomControls.Buttons
 
 	    public static readonly BindableProperty HasShadowProperty = BindableProperty.Create(nameof(HasShadow), typeof(bool), typeof(Frame), true);
 
-	    public static readonly BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ImageButton), null, BindingMode.Default, null, CommandPropertyChanged);
+	    public static readonly BindableProperty CommandProperty = BindableProperty.Create(nameof(Command), typeof(ICommand), typeof(ImageButton), null, BindingMode.Default, null,
+	        ((b, o, n) => ((ImageButton)b).CommandPropertyChanged((ICommand)o, (ICommand)n)), (b, o, n) => ((ImageButton)b).CommandPropertyChanging((ICommand)o, (ICommand)n));
 
-	    public static readonly BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(ImageButton), null);
+	    public static readonly BindableProperty CommandParameterProperty = BindableProperty.Create(nameof(CommandParameter), typeof(object), typeof(ImageButton));
+
+        public new static readonly BindableProperty IsEnabledProperty = BindableProperty.Create("IsEnabled", typeof(bool), typeof(ImageButton), true, BindingMode.Default, null,
+            (b, o, n) => ((ImageButton)b).IsEnabledPropertyChanged((bool)o, (bool)n));
 
 	    public ImageSource Source
 	    {
@@ -64,108 +68,87 @@ namespace ListApplicationFinal.CustomControls.Buttons
 	        set => SetValue(CommandParameterProperty, value);
 	    }
 
-	    private static async Task TransitionDown(ImageButton button)
+	    public new bool IsEnabled
 	    {
-	        try
-	        {
-	            button.Image.Transformations = new List<ITransformation> { new ColorSpaceTransformation(FFColorMatrix.PolaroidColorMatrix) };
-	            await button.Frame.ScaleTo(0.9, 50, Easing.Linear);
-	        }
-	        catch
-	        {
-	            // nothing to do
-	        }
-        }
-        private static async Task TransitionUp(ImageButton button)
-        {
-            try
-            {
-                button.Image.Transformations = new List<ITransformation> { };
-                await button.Frame.ScaleTo(1, 50, Easing.Linear);
-            }
-            catch
-            {
-                // nothing to do
-            }
-        }
+	        set => SetValue(IsEnabledProperty, value);
+	        get => (bool) GetValue(IsEnabledProperty);
+	    }
 
-        public event EventHandler Clicked;
-	    public event EventHandler Pressed;
-	    public event EventHandler Released;
-
-        private void ClickableFrame_Clicked(object sender, EventArgs e)
-        {
-            Command?.Execute(CommandParameter);
-            Clicked?.Invoke(this, EventArgs.Empty);
-        }
-
-        private async void ClickableFrame_Pressed(object sender, EventArgs e)
-        {
-            await TransitionDown(this);
-            Pressed?.Invoke(this, EventArgs.Empty);
-        }
-
-        private async void ClickableFrame_Released(object sender, EventArgs e)
-        {
-            await TransitionUp(this);
-            Released?.Invoke(this, EventArgs.Empty);
-        }
-
-	    private static void CommandPropertyChanged(BindableObject bindable, object oldvalue, object newvalue)
+	    private void CommandPropertyChanging(ICommand oldValue, ICommand newValue)
 	    {
-	        var btn = (ImageButton)bindable;
-	        if (btn == null)
-	            return;
+	        if (oldValue != null)
+	            oldValue.CanExecuteChanged -= CommandOnCanExecuteChanged;
+	    }
 
-	        if (oldvalue != null)
+	    private void CommandPropertyChanged(ICommand oldvalue, ICommand newValue)
+	    {
+	        if (newValue != null)
 	        {
-	            var cmd = (ICommand)oldvalue;
-	            cmd.CanExecuteChanged -= btn.CmdOnCanExecuteChanged;
-	        }
-
-	        if (newvalue != null)
-	        {
-	            var cmd = (ICommand)newvalue;
-	            cmd.CanExecuteChanged += btn.CmdOnCanExecuteChanged;
-	            SetButton(btn, cmd);
+	            newValue.CanExecuteChanged += CommandOnCanExecuteChanged;
+	            IsEnabled = newValue.CanExecute(null);
 	        }
 	    }
 
-	    private void CmdOnCanExecuteChanged(object sender, EventArgs e)
+	    private void CommandOnCanExecuteChanged(object sender, EventArgs e)
 	    {
 	        var cmd = (ICommand)sender;
 	        if (cmd != null)
 	        {
-	            SetButton(this, cmd);
-	        }
+	            IsEnabled = cmd.CanExecute(null);
+            }
 	    }
 
-	    private static void SetButton(ImageButton imageButton, ICommand command)
+	    private void IsEnabledPropertyChanged(bool oldValue, bool newValue)
 	    {
-	        try
-	        {
-	            imageButton.IsEnabled = command.CanExecute(null);
-	            var image = imageButton.Image;
-	            image.Transformations = NoTransformation;
-	            if (!imageButton.IsEnabled)
-	            {
-	                image.Transformations = Transformation;
-	            }
-	        }
-	        catch (Exception e)
-	        {
-	            System.Diagnostics.Debug.WriteLine(e);
-	        }
+	        Image.Transformations = newValue ? NoTransformation : DisabledTransformation;
+	        base.IsEnabled = newValue;
 	    }
 
-	    private static readonly List<ITransformation> NoTransformation;
-	    private static readonly List<ITransformation> Transformation;
+        private static readonly List<ITransformation> NoTransformation;
+	    private static readonly List<ITransformation> DisabledTransformation;
+	    private static readonly List<ITransformation> ClickedTransformation;
 
-	    static ImageButton()
+        static ImageButton()
 	    {
-            Transformation = new List<ITransformation>{ new ColorSpaceTransformation(FFColorMatrix.GrayscaleColorMatrix) };
+            DisabledTransformation = new List<ITransformation>{ new ColorSpaceTransformation(FFColorMatrix.GrayscaleColorMatrix) };
+            ClickedTransformation = new List<ITransformation> { new ColorSpaceTransformation(FFColorMatrix.PolaroidColorMatrix) };
             NoTransformation = new List<ITransformation>();
 	    }
 
-	}
+	    private Task TransitionDownAsync()
+	    {
+	        if (Image == null) return Task.CompletedTask;
+	        Image.Transformations = ClickedTransformation;
+	        return Frame.ScaleTo(0.9, 50, Easing.Linear);
+	    }
+
+	    private Task TransitionUpAsync()
+	    {
+	        if (Image == null) return Task.CompletedTask;
+	        Image.Transformations = NoTransformation;
+	        return Frame.ScaleTo(1, 50, Easing.Linear);
+	    }
+
+	    public event EventHandler Clicked;
+	    public event EventHandler Pressed;
+	    public event EventHandler Released;
+
+	    private void ClickableFrame_Clicked(object sender, EventArgs e)
+	    {
+	        Command?.Execute(CommandParameter);
+	        Clicked?.Invoke(this, EventArgs.Empty);
+	    }
+
+	    private async void ClickableFrame_Pressed(object sender, EventArgs e)
+	    {
+	        await TransitionDownAsync();
+	        Pressed?.Invoke(this, EventArgs.Empty);
+	    }
+
+	    private async void ClickableFrame_Released(object sender, EventArgs e)
+	    {
+	        await TransitionUpAsync();
+	        Released?.Invoke(this, EventArgs.Empty);
+	    }
+    }
 }

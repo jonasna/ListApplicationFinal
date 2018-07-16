@@ -2,10 +2,8 @@
 using ListApplicationFinal.ViewModels.Events;
 using ListApplicationFinal.ViewModels.Interfaces;
 using Prism.Events;
-using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Navigation;
-using Application = Prism.PrismApplicationBase;
 
 namespace ListApplicationFinal.ViewModels
 {

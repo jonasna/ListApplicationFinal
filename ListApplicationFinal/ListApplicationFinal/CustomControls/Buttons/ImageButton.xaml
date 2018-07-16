@@ -12,7 +12,7 @@
             x:Name="Frame"
             CornerRadius="{Binding Source={x:Reference Main}, Path=CornerRadius}"
             Padding="{Binding Source={x:Reference Main}, Path=Padding}"
-            HasShadow="{Binding Source={x:Reference Main}, Path=HasShadow}"            
+            HasShadow="{Binding Source={x:Reference Main}, Path=HasShadow}"     
             Clicked="ClickableFrame_Clicked"
             Pressed="ClickableFrame_Pressed"
             Released="ClickableFrame_Released">
@@ -22,8 +22,6 @@
                                   Aspect="AspectFit"
                                   WidthRequest="{Binding Source={x:Reference Main}, Path=WidthRequest}"
                                   HeightRequest="{Binding Source={x:Reference Main}, Path=HeightRequest}"
-                                  MinimumWidthRequest="{Binding Source={x:Reference Main}, Path=WidthRequest}"
-                                  MinimumHeightRequest="{Binding Source={x:Reference Main}, Path=HeightRequest}"
                                   VerticalOptions="CenterAndExpand"
                                   HorizontalOptions="CenterAndExpand">
             </forms:SvgCachedImage>

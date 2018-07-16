@@ -20,8 +20,7 @@ namespace ListApplicationFinal.Threading
 
     public static class Dispatcher
     {
-        private static Thread _dispatcherThread = null;
-        private static Thread DispatcherThread => _dispatcherThread ?? (_dispatcherThread = new Thread(ThreadRunner){ IsBackground = true });
+        private static readonly Lazy<Thread> DispatcherThread = new Lazy<Thread>(() => new Thread(ThreadRunner) {IsBackground = true});
 
         private static readonly BlockingCollection<DispatcherInfo> ActionRequests;
 
@@ -70,8 +69,8 @@ namespace ListApplicationFinal.Threading
         
         private static void PrependInvocation(DispatcherInitFunc preAction, DispatcherFunc targetAction, DispatcherPostAction postAction)
         {
-            if (!DispatcherThread.IsAlive)
-                DispatcherThread.Start();
+            if (!DispatcherThread.Value.IsAlive)
+                DispatcherThread.Value.Start();
 
             var info = new DispatcherInfo
             {

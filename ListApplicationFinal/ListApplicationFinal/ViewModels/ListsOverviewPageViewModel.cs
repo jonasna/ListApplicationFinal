@@ -4,6 +4,7 @@ using ListApplicationFinal.Domain;
 using Prism.Commands;
 using Prism.Navigation;
 using ListApplicationFinal.Threading;
+using Prism.Services;
 
 namespace ListApplicationFinal.ViewModels
 {
@@ -23,6 +24,8 @@ namespace ListApplicationFinal.ViewModels
             _userService = userService;
         }
 
+        #region Properties
+
         private ObservableCollection<TodoList> _listCollection;
         public ObservableCollection<TodoList> ListCollection
         {
@@ -34,12 +37,16 @@ namespace ListApplicationFinal.ViewModels
         public TodoList SelectedItem
         {
             get => _selectedItem;
-            set => SetProperty(ref _selectedItem, value, CheckSelectedItem);
+            set => SetProperty(ref _selectedItem, value);
         }
+
+        #endregion
+
+        #region Create List Command
 
         private DelegateCommand _createNewListCommand;
         public DelegateCommand CreateNewListCommand =>
-            _createNewListCommand ?? (_createNewListCommand = new DelegateCommand(ExecuteCreateNewListCommand, () => ListCollection != null)).ObservesProperty(() => ListCollection);
+            _createNewListCommand ?? (_createNewListCommand = new DelegateCommand(ExecuteCreateNewListCommand, CanExecuteCreateNewListCommand)).ObservesProperty(() => ListCollection);
 
         private void ExecuteCreateNewListCommand()
         {
@@ -51,11 +58,16 @@ namespace ListApplicationFinal.ViewModels
             }
         }
 
+        private bool CanExecuteCreateNewListCommand() => ListCollection != null;
+
+        #endregion
+
+        #region Delete List Command
+
         private DelegateCommand _deleteListCommand;
 
         public DelegateCommand DeleteListCommand =>
-            _deleteListCommand ?? (_deleteListCommand =
-                new DelegateCommand(ExecuteDeleteListCommand, () => SelectedItem != null)).ObservesProperty(() => SelectedItem);
+            _deleteListCommand ?? (_deleteListCommand = new DelegateCommand(ExecuteDeleteListCommand, CanExecuteDeleteListCommand)).ObservesProperty(() => SelectedItem);
 
         private void ExecuteDeleteListCommand()
         {
@@ -66,16 +78,34 @@ namespace ListApplicationFinal.ViewModels
             }
         }
 
-        private void CheckSelectedItem() => CheckSelectedItem(false);
+        private bool CanExecuteDeleteListCommand() => SelectedItem != null;
 
-        private void CheckSelectedItem(bool reset)
+        #endregion
+
+        #region Modify List Command
+
+        private DelegateCommand _modifyListCommand;
+        public DelegateCommand ModifyListCommand =>
+            _modifyListCommand ?? (_modifyListCommand = new DelegateCommand(ExecuteModifyListCommand, CanExecuteModifyListCommand)).ObservesProperty(() => SelectedItem);
+
+        private void ExecuteModifyListCommand()
         {
-            if (reset) SelectedItem = null;
-            RaisePropertyChanged(nameof(SelectedItem));
+
         }
 
+        private bool CanExecuteModifyListCommand() => SelectedItem != null;
+
+        #endregion
+
+        #region Initiation
+
         protected override void ConfigureOnNavigatedTo(INavigationParameters parameters)
-        {           
+        {
+            InitCollection();
+        }
+
+        private void InitCollection()
+        {
             Dispatcher.BeginInvoke(
                 () =>
                 {
@@ -85,11 +115,10 @@ namespace ListApplicationFinal.ViewModels
                 {
                     ListCollection = new ObservableCollection<TodoList>(collection);
                     return null;
-                }, (o) =>
-                {
-                    CheckSelectedItem(true);
-                });
+                }, (o) => { });
         }
+
+        #endregion
 
     }
 }

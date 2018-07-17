@@ -7,6 +7,7 @@ using ListApplicationFinal.DataServices;
 using ListApplicationFinal.Pages;
 using ListApplicationFinal.ViewModels;
 using DialogServices.Register;
+using DialogServices.Service;
 using Xamarin.Forms;
 
 [assembly: XamlCompilation (XamlCompilationOptions.Compile)]
@@ -56,9 +57,7 @@ namespace ListApplicationFinal
                 [DialogSetting.CancelButtonColor] = "NotOkTextColor"
             };
 
-            _containerRegistry.RegisterDialogServices(dialogConfig);
+            _containerRegistry.RegisterSingleton<IDialogService, DialogService>();
         }
-
-
     }
 }

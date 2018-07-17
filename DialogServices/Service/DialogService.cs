@@ -1,38 +1,40 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Prism.Navigation;
+using Rg.Plugins.Popup.Pages;
+using Rg.Plugins.Popup.Services;
 
 namespace DialogServices.Service
 {
     public class DialogService : IDialogService
     {
-        protected readonly INavigationService Navigation;
-
-        public DialogService(INavigationService navigationService)
-        {
-            Navigation = navigationService;
-        }
-
         public async Task<bool> QuestionDialog(string question, string title, string okBtnText = "Ok", string notOkBtnText = "Cancel")
         {
-            var navParams = new NavigationParameters
+            var questionPopup = new QuestionPopup
             {
-                {"Question", question},
-                {"Title", title},
-                {"OkBtnText", okBtnText},
-                {"NotOkBtnText", notOkBtnText}
+                Question = question,
+                Title = title,
+                OkBtnText = okBtnText,
+                NotOkBtnText = notOkBtnText
             };
 
-            return await Navigate<bool>(navParams, "QuestionDialogPage");
+            return await Navigate(questionPopup);
         }
 
-        private async Task<T> Navigate<T>(INavigationParameters navParams, string uri)
-        {
-            var source = new TaskCompletionSource<T>();
-            navParams.Add("Source", source);
+        private static async Task<T> Navigate<T>(PopupBase<T> popup)
+        {           
+            popup.Completion = new TaskCompletionSource<T>();
+            popup.ResultSetEvent += PopupOnOnResultSetEvent;
+            
+            await PopupNavigation.Instance.PushAsync(popup);
+            return await popup.Completion.Task;
+        }
 
-            await Navigation.NavigateAsync(new Uri(uri, UriKind.Relative), navParams);
-            return await source.Task;
+        private static async void PopupOnOnResultSetEvent(object sender, EventArgs e)
+        {
+            await PopupNavigation.Instance.RemovePageAsync((PopupPage) sender);
+            var popup = (INotifyResultSet) sender;
+
+            popup.ResultSetEvent -= PopupOnOnResultSetEvent;
         }
     }
 

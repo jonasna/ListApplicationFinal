@@ -1,10 +1,9 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<dialogServices:PopupPageBase xmlns:dialogServices="clr-namespace:DialogServices;assembly=DialogServices"
-                              xmlns="http://xamarin.com/schemas/2014/forms" 
-                              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                              x:Class="DialogServices.Pages.QuestionDialogPage"
-                              BackBtnPressedCommand="{Binding OnBackBtnPressedCommand}"
-                              BackGroundPressedCommand="{Binding OnBackgroundPressedCommand}">
+<dialogServices:PopupBase x:TypeArguments="x:Boolean"
+                          xmlns:dialogServices="clr-namespace:DialogServices;assembly=DialogServices"
+                          xmlns="http://xamarin.com/schemas/2014/forms" 
+                          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                          x:Class="DialogServices.QuestionPopup">
 
     <Frame HorizontalOptions="Center"
            VerticalOptions="Center"
@@ -20,7 +19,7 @@
                 <RowDefinition/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            
+
             <Label Text="{Binding Title}"
                    HorizontalOptions="CenterAndExpand"
                    VerticalOptions="CenterAndExpand"
@@ -48,21 +47,21 @@
                         HorizontalOptions="Center"
                         VerticalOptions="Center"
                         WidthRequest="75"
-                        Command="{Binding CancelCommand}"
                         Grid.Column="0"
                         x:Name="CancelButton"
                         FontSize="16"
-                        CornerRadius="10"/>
+                        CornerRadius="10"
+                        Clicked="HandleCancelBtnClicked"/>
 
                 <Button Text="{Binding OkBtnText}"
                         HorizontalOptions="Center"
                         VerticalOptions="Center"
                         WidthRequest="75"
-                        Command="{Binding AcceptCommand}"
                         Grid.Column="1"
                         x:Name="AcceptButton"
                         FontSize="16"
-                        CornerRadius="10"/>
+                        CornerRadius="10"
+                        Clicked="HandleOkBtnClicked"/>
 
             </Grid>
 
@@ -70,4 +69,4 @@
 
     </Frame>
 
-</dialogServices:PopupPageBase>
+</dialogServices:PopupBase>

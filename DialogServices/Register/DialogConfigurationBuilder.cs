@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Prism;
+using Xamarin.Forms;
 
 namespace DialogServices.Register
 {
@@ -39,7 +39,7 @@ namespace DialogServices.Register
         {
             if (builder.ContainsSetting(target))
             {
-                result = (T)PrismApplicationBase.Current.Resources[builder[target]];
+                result = (T)Application.Current.Resources[builder[target]];
                 return true;
             }
 

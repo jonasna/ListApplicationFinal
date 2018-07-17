@@ -19,14 +19,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AiForms.Layouts" Version="1.1.0" />
     <PackageReference Include="Prism.Unity.Forms" Version="7.1.0.172-pre" />
     <PackageReference Include="Syncfusion.Licensing" Version="16.2.0.42" />
     <PackageReference Include="Syncfusion.Xamarin.SfListView" Version="16.2.0.42" />
     <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.3.840" />
     <PackageReference Include="Xamarin.FFImageLoading.Svg.Forms" Version="2.4.3.840" />
     <PackageReference Include="Xamarin.FFImageLoading.Transformations" Version="2.4.3.840" />
-    <PackageReference Include="Xamarin.Forms" Version="3.1.0.583944" />
+    <PackageReference Include="Xamarin.Forms" Version="3.1.0.637273" />
   </ItemGroup>
 
   <ItemGroup>

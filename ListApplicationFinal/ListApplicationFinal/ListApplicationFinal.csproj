@@ -6,13 +6,11 @@
 
   <ItemGroup>
     <None Remove="Images\add.svg" />
-    <None Remove="Images\button.svg" />
     <None Remove="Images\delete.svg" />
     <None Remove="Images\eye.svg" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Images\button.svg" />
     <EmbeddedResource Include="Images\delete.svg" />
     <EmbeddedResource Include="Images\eye.svg" />
     <EmbeddedResource Include="Images\add.svg" />

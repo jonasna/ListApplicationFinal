@@ -99,26 +99,11 @@ namespace ListApplicationFinal.ViewModels
 
         #region Initiation
 
-        protected override void ConfigureOnNavigatedTo(INavigationParameters parameters)
+        protected override async void ConfigureOnNavigatingTo(INavigationParameters parameters)
         {
-            InitCollection();
-        }
-
-        private void InitCollection()
-        {
-            Dispatcher.BeginInvoke(
-                () =>
-                {
-                    return _todoService.GetAllLists();
-
-                }, collection =>
-                {
-                    ListCollection = new ObservableCollection<TodoList>(collection);
-                    return null;
-                }, (o) => { });
+            ListCollection = new ObservableCollection<TodoList>(await _todoService.GetAllListsAsync());
         }
 
         #endregion
-
     }
 }

@@ -39,7 +39,7 @@ namespace ListApplicationFinal.Threading
                 var state = invocation.Pre.Invoke();
                 Debug.WriteLine("Executed Pre");
 
-                Device.BeginInvokeOnMainThread(() =>
+                var action = new Action(() =>
                 {
                     Debug.WriteLine("Executing Target");
                     state = invocation.Target.Invoke(state);
@@ -47,7 +47,9 @@ namespace ListApplicationFinal.Threading
                     Debug.WriteLine("Executed Target");
                 });
 
+                Device.BeginInvokeOnMainThread(action);
                 completionSource.Task.Wait();
+
                 Debug.WriteLine("Executing Post");
                 invocation.Post.Invoke(state);
                 Debug.WriteLine("Executed Post");

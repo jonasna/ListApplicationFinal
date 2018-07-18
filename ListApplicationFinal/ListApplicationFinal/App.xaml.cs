@@ -15,6 +15,9 @@ namespace ListApplicationFinal
 {
     public partial class App : PrismApplication
     {
+        private const string LoginPageUri = "/MasterPage/NavBarPage/LoginPage";
+        private const string MainPageUri = "/MasterPage/NavBarPage/MainPage";
+        
         public App() : this(null) { }
 
         public App(IPlatformInitializer initializer) : base(initializer) { }
@@ -28,11 +31,11 @@ namespace ListApplicationFinal
             if (!ApplicationUserService.IsValid)
             {
                 var firstLoadParams = new NavigationParameters {{"FirstLoad", null}};
-                await NavigationService.NavigateAsync("/LoginPage", firstLoadParams);
+                await NavigationService.NavigateAsync(LoginPageUri, firstLoadParams);
             }
             else
             {
-                await NavigationService.NavigateAsync("/MasterPage/NavBarPage/MainPage");
+                await NavigationService.NavigateAsync(MainPageUri);
             }
 
         }

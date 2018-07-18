@@ -2,6 +2,8 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:converters="clr-namespace:ListApplicationFinal.Converters;assembly=ListApplicationFinal"
+             xmlns:buttons="clr-namespace:ListApplicationFinal.CustomControls.Buttons;assembly=ListApplicationFinal"
+             xmlns:markup="clr-namespace:ListApplicationFinal.Markup;assembly=ListApplicationFinal"
              x:Class="ListApplicationFinal.Pages.LoginPage"
              BackgroundColor="{StaticResource PrimaryBackgroundColor}"
              Title="{Binding Title}">
@@ -50,7 +52,7 @@
 
             </StackLayout>
 
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="2" MinimumWidthRequest="70">
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
@@ -82,6 +84,10 @@
                         BackgroundColor="{StaticResource ButtonColor}"
                         TextColor="White"
                         Command="{Binding SaveCommand}"/>
+
+                <!--<buttons:ImageButton Grid.Column="1" Source="{markup:ImageResource save_changes.svg}" WidthRequest="70" HeightRequest="70" HorizontalOptions="CenterAndExpand"
+                                     VerticalOptions="CenterAndExpand" 
+                                     Command="{Binding SaveCommand}"></buttons:ImageButton>-->
 
             </Grid>
 

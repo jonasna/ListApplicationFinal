@@ -5,7 +5,8 @@
              xmlns:forms="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
              x:Class="ListApplicationFinal.CustomControls.Buttons.ImageButton"
              Padding="0"
-             x:Name="Main">
+             x:Name="Main"
+             BackgroundColor="Transparent">
     <ContentView.Content>
 
         <customControls:ClickableFrame

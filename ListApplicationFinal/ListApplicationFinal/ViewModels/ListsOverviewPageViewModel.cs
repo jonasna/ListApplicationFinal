@@ -3,8 +3,6 @@ using ListApplicationFinal.DataServices;
 using ListApplicationFinal.Domain;
 using Prism.Commands;
 using Prism.Navigation;
-using ListApplicationFinal.Threading;
-using Prism.Services;
 
 namespace ListApplicationFinal.ViewModels
 {

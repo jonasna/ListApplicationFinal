@@ -1,6 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using ListApplicationFinal.DataServices;
 using ListApplicationFinal.Domain;
+using ListApplicationFinal.Threading;
 using Prism.Commands;
 using Prism.Navigation;
 
@@ -11,6 +13,8 @@ namespace ListApplicationFinal.ViewModels
 
         private readonly ITodoService _todoService;
         private readonly IApplicationUserService _userService;
+
+        private bool _recentlyConstructed = true;
 
         public ListsOverviewPageViewModel(INavigationService navigationService,
                                           ITodoService todoService,
@@ -97,9 +101,13 @@ namespace ListApplicationFinal.ViewModels
 
         #region Initiation
 
-        protected override async void ConfigureOnNavigatingTo(INavigationParameters parameters)
+        protected override async void ConfigureOnNavigatedTo(INavigationParameters parameters)
         {
-            ListCollection = new ObservableCollection<TodoList>(await _todoService.GetAllListsAsync());
+            if (!_recentlyConstructed) return;
+            _recentlyConstructed = false;
+
+            var list = await _todoService.GetAllListsAsync();
+            ListCollection = new ObservableCollection<TodoList>(list);
         }
 
         #endregion

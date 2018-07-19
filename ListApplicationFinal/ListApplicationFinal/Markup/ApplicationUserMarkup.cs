@@ -42,9 +42,7 @@ namespace ListApplicationFinal.Markup
         private static string GetDataString(UserData data)
         {
             var userService = DependencyExtensions.GetDependency<IApplicationUserService>();
-            if (data == UserData.Name)
-                return userService.Name;
-            return userService.DisplayName;
+            return data == UserData.Name ? userService.Name : userService.DisplayName;
         }
     }
 }

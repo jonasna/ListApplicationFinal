@@ -21,6 +21,7 @@
   <ItemGroup>
     <PackageReference Include="Prism.Unity.Forms" Version="7.1.0.172-pre" />
     <PackageReference Include="Syncfusion.Licensing" Version="16.2.0.42" />
+    <PackageReference Include="Syncfusion.Xamarin.Buttons" Version="16.2.0.42" />
     <PackageReference Include="Syncfusion.Xamarin.SfListView" Version="16.2.0.42" />
     <PackageReference Include="Xamarin.FFImageLoading.Forms" Version="2.4.3.840" />
     <PackageReference Include="Xamarin.FFImageLoading.Svg.Forms" Version="2.4.3.840" />
@@ -58,6 +59,9 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Pages\NavBarPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Pages\SingleListPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="ResourceDictionaries\ColorDictionary.xaml">

@@ -8,6 +8,7 @@ using ListApplicationFinal.Pages;
 using ListApplicationFinal.ViewModels;
 using DialogServices.Register;
 using DialogServices.Service;
+using Prism.Mvvm;
 using Xamarin.Forms;
 
 [assembly: XamlCompilation (XamlCompilationOptions.Compile)]
@@ -52,6 +53,7 @@ namespace ListApplicationFinal
             containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
             containerRegistry.RegisterForNavigation<ListsOverviewPage, ListsOverviewPageViewModel>();
             containerRegistry.RegisterForNavigation<MasterPage, MasterPageViewModel>(); // Master detail
+            containerRegistry.RegisterForNavigation<SingleListPage, SingleListPageViewModel>();
 
             var dialogConfig = new DialogConfigurationBuilder
             {

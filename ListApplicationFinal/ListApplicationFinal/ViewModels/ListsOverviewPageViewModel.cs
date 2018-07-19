@@ -40,6 +40,8 @@ namespace ListApplicationFinal.ViewModels
             set => SetProperty(ref _selectedItem, value);
         }
 
+        private bool CanModifyOrDelete => SelectedItem != null;
+
         #endregion
 
         #region Create List Command
@@ -78,7 +80,7 @@ namespace ListApplicationFinal.ViewModels
             }
         }
 
-        private bool CanExecuteDeleteListCommand() => SelectedItem != null;
+        private bool CanExecuteDeleteListCommand() => CanModifyOrDelete;
 
         #endregion
 
@@ -88,12 +90,12 @@ namespace ListApplicationFinal.ViewModels
         public DelegateCommand ModifyListCommand =>
             _modifyListCommand ?? (_modifyListCommand = new DelegateCommand(ExecuteModifyListCommand, CanExecuteModifyListCommand)).ObservesProperty(() => SelectedItem);
 
-        private void ExecuteModifyListCommand()
+        private async void ExecuteModifyListCommand()
         {
-
+            await NavigationService.NavigateAsync("SingleListPage", new NavigationParameters{{ KnownNavigationParameters.XamlParam, SelectedItem}}, true);
         }
 
-        private bool CanExecuteModifyListCommand() => SelectedItem != null;
+        private bool CanExecuteModifyListCommand() => CanModifyOrDelete;
 
         #endregion
 

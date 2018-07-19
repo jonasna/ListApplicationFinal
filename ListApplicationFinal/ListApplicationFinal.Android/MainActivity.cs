@@ -12,6 +12,8 @@ using ListApplicationFinal.Droid.CustomRenderers;
 using ListApplicationFinal.Pages;
 using Prism;
 using Prism.Ioc;
+using Xamarin.Forms;
+using Xamarin.Forms.Platform.Android;
 
 namespace ListApplicationFinal.Droid
 {
@@ -34,10 +36,10 @@ namespace ListApplicationFinal.Droid
             CachedImageRenderer.Init(true);
             ClickableFrameRenderer.Init();
 
-
             try
             {
                 LoadApplication(new App(new AndroidInitializer()));
+                Window.SetStatusBarColor(Color.FromHex("#0e9086").ToAndroid()); // Button background color
             }
             catch (System.Exception e)
             {

@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using ListApplicationFinal.DataServices;
 using ListApplicationFinal.Domain;
-using ListApplicationFinal.Threading;
 using Prism.Commands;
 using Prism.Navigation;
 

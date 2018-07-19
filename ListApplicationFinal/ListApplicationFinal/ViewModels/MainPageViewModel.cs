@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using Prism.Commands;
-using Prism.Events;
 using Prism.Navigation;
 
 namespace ListApplicationFinal.ViewModels

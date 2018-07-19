@@ -1,6 +1,4 @@
-﻿using ListApplicationFinal.ViewModels.Events;
-using Prism.Events;
-using Prism.Navigation;
+﻿using Prism.Navigation;
 
 namespace ListApplicationFinal.ViewModels
 {

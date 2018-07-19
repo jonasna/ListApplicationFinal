@@ -1,13 +1,12 @@
 ﻿using System.Threading.Tasks;
 using DialogServices.Service;
 using ListApplicationFinal.DataServices;
-using ListApplicationFinal.ViewModels.Interfaces;
 using Prism.Commands;
 using Prism.Navigation;
 
 namespace ListApplicationFinal.ViewModels
 {
-    public class LoginPageViewModel : VmBase, IConfirmNavigation, INotifyPageNameChange
+    public class LoginPageViewModel : VmBase, IConfirmNavigation
     {
         private const string SettingsSavedText = "Your settings have been saved";
         private const string SettingsNotSavedText = "Your settings have not been saved";
@@ -21,8 +20,6 @@ namespace ListApplicationFinal.ViewModels
         private readonly IApplicationUserService _applicationUserService;
         private readonly IDialogService _dialogService;
 
-        public bool ShouldNotify { get; set; } // INotifyPageName
-
         private Task<bool> ShouldNavigateToMainPage =>
             _dialogService.QuestionDialog(DialogQuestion, "Question", "Yes", "No");
 
@@ -32,7 +29,6 @@ namespace ListApplicationFinal.ViewModels
             : base(navigationService)
         {
             Title = "Login Page";
-            ShouldNotify = true;
 
             _applicationUserService = applicationUserService;
             _dialogService = dialogService;
@@ -132,8 +128,7 @@ namespace ListApplicationFinal.ViewModels
             if (!_applicationUserService.IsValid)
                 return true;
 
-            return !(DisplayName == _applicationUserService.DisplayName
-                     && Name == _applicationUserService.Name);
+            return DisplayName != _applicationUserService.DisplayName || Name != _applicationUserService.Name;
         }
 
         private DelegateCommand _clearCommand;

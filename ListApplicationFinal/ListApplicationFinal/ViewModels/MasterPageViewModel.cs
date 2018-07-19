@@ -1,23 +1,20 @@
-﻿using ListApplicationFinal.ViewModels.Events;
-using ListApplicationFinal.ViewModels.Interfaces;
-using Prism.Commands;
-using Prism.Events;
+﻿using Prism.Commands;
 using Prism.Navigation;
 
 namespace ListApplicationFinal.ViewModels
 {
-    public class MasterPageViewModel : VmBase, IHandlePageNameChange
+    public class MasterPageViewModel : VmBase
     {
-        private string _currentPage;
-
         public MasterPageViewModel(INavigationService navigationService) : base(navigationService)
         {
 
         }
 
-        public void HandlePageNameChange(string pageName)
+        private bool _isPresented;
+        public bool IsPresented
         {
-            _currentPage = pageName;
+            get => _isPresented;
+            set => SetProperty(ref _isPresented, value);
         }
 
         private DelegateCommand<string> _navigateCommand;
@@ -27,9 +24,8 @@ namespace ListApplicationFinal.ViewModels
         private async void ExecuteCommandName(string uri)
         {
             var navResult = await NavigationService.NavigateAsync("NavBarPage/" + uri);
-
-            if (!navResult.Success && _currentPage != null)
-                await NavigationService.NavigateAsync("NavBarPage/" + _currentPage);
+            if (!navResult.Success)
+                IsPresented = false;
         }
     }
 }

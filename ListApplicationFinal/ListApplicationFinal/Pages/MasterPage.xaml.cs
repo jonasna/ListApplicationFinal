@@ -7,6 +7,7 @@ namespace ListApplicationFinal.Pages
         public MasterPage()
         {
             InitializeComponent();
+            
         }
     }
 }

@@ -73,29 +73,20 @@ namespace ListApplicationFinal.DataServices
             return Task.Run(() => GetAllLists());
         }
 
-        public async void Init()
+        public void Init()
         {
-            await InitAsync();
+            AddList(new TodoList("List", "SwagBoy1335"));
+            AddList(new TodoList("List", "SwagBoy1335"));
+            AddList(new TodoList("List", "SwagBoy1335"));
+            AddList(new TodoList("List", "SwagBoy1335"));
+            AddList(new TodoList("List", "SwagBoy1335"));
+            AddList(new TodoList("List", "SwagBoy1335"));
+            AddList(new TodoList("List", "SwagBoy1335"));
+            AddList(new TodoList("List", "SwagBoy1335"));
+            AddList(new TodoList("List", "SwagBoy1335"));
+            AddList(new TodoList("List", "SwagBoy1335"));
+            AddList(new TodoList("List", "SwagBoy1335"));
+            AddList(new TodoList("List", "SwagBoy1335"));
         }
-
-        public Task InitAsync()
-        {
-            return Task.Run(() =>
-            {
-                AddList(new TodoList("List", "SwagBoy1335"));
-                AddList(new TodoList("List", "SwagBoy1335"));
-                AddList(new TodoList("List", "SwagBoy1335"));
-                AddList(new TodoList("List", "SwagBoy1335"));
-                AddList(new TodoList("List", "SwagBoy1335"));
-                AddList(new TodoList("List", "SwagBoy1335"));
-                AddList(new TodoList("List", "SwagBoy1335"));
-                AddList(new TodoList("List", "SwagBoy1335"));
-                AddList(new TodoList("List", "SwagBoy1335"));
-                AddList(new TodoList("List", "SwagBoy1335"));
-                AddList(new TodoList("List", "SwagBoy1335"));
-                AddList(new TodoList("List", "SwagBoy1335"));
-            });
-        }
-
     }
 }

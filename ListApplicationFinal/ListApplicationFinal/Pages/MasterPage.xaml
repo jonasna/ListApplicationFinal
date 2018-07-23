@@ -14,7 +14,7 @@
                         TextColor="White"
                         CornerRadius="10"
                         Command="{Binding NavigateCommand}"
-                        CommandParameter="MainPage"/>
+                        CommandParameter="ListsOverviewPage"/>
 
                 <Button Text="Settings"
                         VerticalOptions="EndAndExpand"

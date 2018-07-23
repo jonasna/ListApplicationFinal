@@ -20,6 +20,16 @@ namespace DialogServices.Service
             return await Navigate(questionPopup);
         }
 
+        public async Task<string> StringQueryDialog(string queryQuestion)
+        {
+            var queryStringDialog = new QueryStringPopup
+            {
+                QueryQuestion = queryQuestion
+            };
+
+            return await Navigate(queryStringDialog);
+        }
+
         private static async Task<T> Navigate<T>(PopupBase<T> popup)
         {           
             popup.Completion = new TaskCompletionSource<T>();

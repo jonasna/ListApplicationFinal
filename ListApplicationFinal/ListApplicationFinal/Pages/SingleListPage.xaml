@@ -3,38 +3,100 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:xForms="clr-namespace:Syncfusion.ListView.XForms;assembly=Syncfusion.SfListView.XForms"
              xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
+             xmlns:behaviors="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
+             xmlns:converters="clr-namespace:ListApplicationFinal.Converters;assembly=ListApplicationFinal"
              x:Class="ListApplicationFinal.Pages.SingleListPage"
-             BackgroundColor="{StaticResource PrimaryBackgroundColor}">
+             BackgroundColor="{StaticResource PrimaryBackgroundColor}"
+             Padding="45"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+
+        <converters:SwipeEndedEventArgsConverter x:Key="SwipeArgsConverter"/>
+        <converters:DraggingEventArgsConverter x:Key="DraggingArgsConverter"/>
+
+    </ContentPage.Resources>
 
     <xForms:SfListView x:Name="ToDoListView"
-                       ItemsSource="{Binding ToDoCollection}"
-                       TapCommand="{Binding ItemTappedCommand}"
-                       >
+                           ItemsSource="{Binding ToDoCollection}"
+                           SelectionBackgroundColor="Transparent"
+                           ItemSpacing="0,0,0,10"
+                           AutoFitMode="Height"
+                           DragStartMode="OnHold"
+                           AllowSwiping="True"
+                           >
+
+        <xForms:SfListView.Behaviors>
+
+            <behaviors:EventToCommandBehavior EventName="SwipeEnded"
+                                              Command="{Binding SwipeCommand}"
+                                              EventArgsConverter="{StaticResource SwipeArgsConverter}"/>
+
+            <behaviors:EventToCommandBehavior EventName="ItemDragging"
+                                              Command="{Binding DraggingCommand}"
+                                              EventArgsConverter="{StaticResource DraggingArgsConverter}"/>
+
+        </xForms:SfListView.Behaviors>
+
+        <xForms:SfListView.LeftSwipeTemplate>
+
+            <DataTemplate>
+
+                <Grid HorizontalOptions="Fill" VerticalOptions="Fill" BackgroundColor="{StaticResource PrimaryBackgroundColor}"/>
+
+            </DataTemplate>
+
+        </xForms:SfListView.LeftSwipeTemplate>
 
         <xForms:SfListView.ItemTemplate>
 
             <DataTemplate>
 
-                <Grid>
+                <Frame CornerRadius="10" Padding="0" HasShadow="True" BackgroundColor="{StaticResource ButtonColor}">
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>                    
+                    <Grid>
 
-                    <Label Text="{Binding Name}" Grid.Column="0" HorizontalOptions="CenterAndExpand" VerticalOptions="Center"/>
+                        <Grid.GestureRecognizers>
 
-                    <Label Text="{Binding Description}" Grid.Column="1" HorizontalOptions="CenterAndExpand" VerticalOptions="Center"/>
+                            <TapGestureRecognizer Command="{Binding Source={x:Reference ToDoListView}, Path=BindingContext.ItemTappedCommand}"
+                                                  CommandParameter="{Binding .}"/>
 
-                    <buttons:SfCheckBox Grid.Column="2" IsChecked="{Binding Complete}" HorizontalOptions="CenterAndExpand" VerticalOptions="Center" InputTransparent="True"/>
+                        </Grid.GestureRecognizers>
 
-                </Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <buttons:SfCheckBox x:Name="CheckBox"
+                                            Grid.Column="0"
+                                            IsChecked="{Binding Complete}"
+                                            HorizontalOptions="StartAndExpand"
+                                            VerticalOptions="Center"
+                                            InputTransparent="True"
+                                            Margin="8,0,0,0"
+                                            Padding="10"
+                                            Text="{Binding Name}"
+                                            TextColor="White"
+                                            FontSize="14"
+                                            FontAttributes="Bold"
+                                            UncheckedColor="{StaticResource NavigationBackgroundColor}"
+                                            CheckedColor="{StaticResource NavigationBackgroundColor}"/>
+
+                        <Label Text="{Binding Description}"
+                               Grid.Column="1"
+                               HorizontalOptions="Start"
+                               VerticalOptions="Center"
+                               Margin="0,0,10,0"
+                               FontAttributes="Italic"
+                               TextColor="White"/>
+
+                    </Grid>
+                </Frame>
 
             </DataTemplate>
 
         </xForms:SfListView.ItemTemplate>
-
     </xForms:SfListView>
-
+    
 </ContentPage>

@@ -10,9 +10,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="QueryStringPopup.xaml.cs">
+      <DependentUpon>QueryStringPopup.xaml</DependentUpon>
+    </Compile>
     <Compile Update="QuestionPopup.xaml.cs">
       <DependentUpon>QuestionPopup.xaml</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="QueryStringPopup.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<dialogServices:PopupBase x:TypeArguments="system:String"
+                          xmlns="http://xamarin.com/schemas/2014/forms"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                          xmlns:dialogServices="clr-namespace:DialogServices;assembly=DialogServices"
+                          xmlns:system="clr-namespace:System;assembly=netstandard"
+                          x:Class="DialogServices.QueryStringPopup">
+
+    <Frame HorizontalOptions="Center"
+           VerticalOptions="Center"
+           CornerRadius="10"
+           Padding="5"
+           HasShadow="True"
+           x:Name="Frame">
+
+        <Grid WidthRequest="200" HeightRequest="200">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0" Text="{Binding QueryQuestion}"
+                   HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
+                   LineBreakMode="CharacterWrap"
+                   FontSize="16" FontAttributes="Bold"/>
+            
+            <Entry Grid.Row="1"
+                   Text="{Binding Input}"
+                   FontSize="22"
+                   HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" HorizontalTextAlignment="Center"/>
+
+            <Grid Grid.Row="2">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Button Text="Cancel" Clicked="HandleCancelBtnClicked" Grid.Column="0" CornerRadius="10"  FontSize="16"/>
+                <Button Text="Confirm" Clicked="HandleConfirmBtnClicked" Grid.Column="1" IsEnabled="{Binding CanExecute}" CornerRadius="10" FontSize="16"/>
+
+            </Grid>
+
+        </Grid>
+
+    </Frame>
+
+</dialogServices:PopupBase>

@@ -10,18 +10,15 @@ namespace ListApplicationFinal.ViewModels
     {
         private const string SettingsSavedText = "Your settings have been saved";
         private const string SettingsNotSavedText = "Your settings have not been saved";
-        private const string ErrorMsgText = "Fill out the form before continuing";
+        private const string SettingsClearedText = "Fill out the form before continuing";
 
         private const string DialogQuestion =
             "Your settings have been saved succesfully. Would you like to navigate to main page?";
 
-        private const string MainPage = "../MainPage";
+        private const string MainPage = "../ListsOverviewPage";
 
         private readonly IApplicationUserService _applicationUserService;
         private readonly IDialogService _dialogService;
-
-        private Task<bool> ShouldNavigateToMainPage =>
-            _dialogService.QuestionDialog(DialogQuestion, "Question", "Yes", "No");
 
         public LoginPageViewModel(INavigationService navigationService,
             IApplicationUserService applicationUserService,
@@ -34,7 +31,10 @@ namespace ListApplicationFinal.ViewModels
             _dialogService = dialogService;
         }
 
-        private bool _firstLoad = false;
+        private Task<bool> ShouldNavigateToMainPage =>
+            _dialogService.QuestionDialog(DialogQuestion, "Question", "Yes", "No");
+
+        private bool _firstLoad;
         public bool FirstLoad
         {
             get => _firstLoad;
@@ -47,7 +47,7 @@ namespace ListApplicationFinal.ViewModels
             get => _welcomeText;
             set
             {
-                if (!SetProperty(ref _welcomeText, value) && !_applicationUserService.IsValid)
+                if (!SetProperty(ref _welcomeText, value) && !DoSettingsMatch)
                 {
                     SaveCommand.RaiseCanExecuteChanged();
                 }
@@ -64,27 +64,31 @@ namespace ListApplicationFinal.ViewModels
         private string _name;
         public string Name
         {
-            get => _name;
-            set => SetProperty(ref _name, value, OnNamePropertySet);
+            get => _name ?? string.Empty;
+            set => SetProperty(ref _name, value ?? string.Empty, OnNamePropertySet);
         }
 
         private string _displayName;
         public string DisplayName
         {
-            get => _displayName;
-            set => SetProperty(ref _displayName, value, OnNamePropertySet);
+            get => _displayName ?? string.Empty;
+            set => SetProperty(ref _displayName, value ?? string.Empty, OnNamePropertySet);
         }
+
+        private bool DoSettingsMatch => DisplayName.Trim() == _applicationUserService.DisplayName &&
+                                        Name.Trim() == _applicationUserService.Name;
 
         private void OnNamePropertySet()
         {
-            if (_applicationUserService.IsValid == false)
+
+            if (!_applicationUserService.IsValid)
             {
-                WelcomeText = SettingsNotSavedText;
+                WelcomeText = SettingsClearedText;
                 IsValid = false;
                 return;
             }
 
-            if (DisplayName == _applicationUserService.DisplayName && Name == _applicationUserService.Name)
+            if (DoSettingsMatch)
             {
                 WelcomeText = SettingsSavedText;
                 IsValid = true;
@@ -96,6 +100,12 @@ namespace ListApplicationFinal.ViewModels
             }        
         }
 
+        private void InitProperties()
+        {
+            Name = _applicationUserService.Name;
+            DisplayName = _applicationUserService.DisplayName;
+        }
+
         private DelegateCommand _saveCommand;
         public DelegateCommand SaveCommand =>
             _saveCommand ?? (_saveCommand = new DelegateCommand(ExecuteSaveCommand, CanExecuteSaveCommand)).
@@ -103,8 +113,8 @@ namespace ListApplicationFinal.ViewModels
 
         private async void ExecuteSaveCommand()
         {
-            _applicationUserService.DisplayName = DisplayName;
-            _applicationUserService.Name = Name;
+            _applicationUserService.DisplayName = DisplayName.Trim();
+            _applicationUserService.Name = Name.Trim();
 
             await _applicationUserService.SaveUserDataAsync();
 
@@ -128,7 +138,7 @@ namespace ListApplicationFinal.ViewModels
             if (!_applicationUserService.IsValid)
                 return true;
 
-            return DisplayName != _applicationUserService.DisplayName || Name != _applicationUserService.Name;
+            return !DoSettingsMatch;
         }
 
         private DelegateCommand _clearCommand;
@@ -141,32 +151,14 @@ namespace ListApplicationFinal.ViewModels
             InitProperties();
         }
 
-        protected override void ConfigureOnNavigatedTo(INavigationParameters parameters)
+        protected override void ConfigureOnNavigatedTo(INavigationParameters parameters) => InitProperties();
+
+        protected override void ConfigureOnNavigatingTo(INavigationParameters parameters)
         {
-            if (parameters.ContainsKey("FirstLoad"))
-            {
-                FirstLoad = true;
-            }
-            InitProperties();
+            FirstLoad = parameters.ContainsKey("FirstLoad");
         }
 
-        private void InitProperties()
-        {
-            Name = _applicationUserService.Name;
-            DisplayName = _applicationUserService.DisplayName;
-            if(!_applicationUserService.IsValid)
-                OnNamePropertySet();
-        }
+        public bool CanNavigate(INavigationParameters parameters) => _applicationUserService.IsValid;
 
-        public bool CanNavigate(INavigationParameters parameters)
-        {
-            if (!_applicationUserService.IsValid)
-            {
-                IsValid = _applicationUserService.IsValid;
-                WelcomeText = ErrorMsgText;
-            }
-
-            return _applicationUserService.IsValid;
-        }
     }
 }

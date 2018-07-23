@@ -41,6 +41,17 @@ namespace DialogServices
             return true;
         }
 
+        protected virtual bool SetProperty<TProp>(ref TProp field, TProp value, Action onSet, [CallerMemberName] string propertyName = null)
+        {
+            if (EqualityComparer<TProp>.Default.Equals(field, value))
+                return false;
+
+            field = value;
+            onSet?.Invoke();
+            RaisePropertyChanged(propertyName);
+            return true;
+        }
+
         protected void RaisePropertyChanged(string propertyName)
         {
             OnPropertyChanged(propertyName);

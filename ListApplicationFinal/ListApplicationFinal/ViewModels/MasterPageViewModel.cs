@@ -19,9 +19,9 @@ namespace ListApplicationFinal.ViewModels
 
         private DelegateCommand<string> _navigateCommand;
         public DelegateCommand<string> NavigateCommand =>
-            _navigateCommand ?? (_navigateCommand = new DelegateCommand<string>(ExecuteCommandName));
+            _navigateCommand ?? (_navigateCommand = new DelegateCommand<string>(ExecuteNavigateCommand));
 
-        private async void ExecuteCommandName(string uri)
+        private async void ExecuteNavigateCommand(string uri)
         {
             var navResult = await NavigationService.NavigateAsync("NavBarPage/" + uri);
             if (!navResult.Success)

@@ -1,4 +1,6 @@
 ﻿using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using DialogServices.Service;
 using ListApplicationFinal.DataServices;
 using ListApplicationFinal.Domain;
 using Prism.Commands;
@@ -11,17 +13,18 @@ namespace ListApplicationFinal.ViewModels
 
         private readonly ITodoService _todoService;
         private readonly IApplicationUserService _userService;
-
-        private bool _recentlyConstructed = true;
+        private readonly IDialogService _dialogService;
 
         public ListsOverviewPageViewModel(INavigationService navigationService,
                                           ITodoService todoService,
-                                          IApplicationUserService userService) : base(navigationService)
+                                          IApplicationUserService userService,
+                                          IDialogService dialogService) : base(navigationService)
 
         {
             Title = "List Collection";
             _todoService = todoService;
             _userService = userService;
+            _dialogService = dialogService;
         }
 
         #region Properties
@@ -50,14 +53,15 @@ namespace ListApplicationFinal.ViewModels
         public DelegateCommand CreateNewListCommand =>
             _createNewListCommand ?? (_createNewListCommand = new DelegateCommand(ExecuteCreateNewListCommand, CanExecuteCreateNewListCommand)).ObservesProperty(() => ListCollection);
 
-        private void ExecuteCreateNewListCommand()
+        private async void ExecuteCreateNewListCommand()
         {
+            var listName = await _dialogService.StringQueryDialog("Please enter the list name");
+            if (listName == null) return;
+
             TodoList list;
-            if ((list = _todoService.AddList(new TodoList("List", _userService.DisplayName))) != null)
-            {
-                ListCollection.Add(list);
-                SelectedItem = list;
-            }
+            if ((list = _todoService.AddList(new TodoList(listName, _userService.DisplayName))) == null) return;
+            ListCollection.Add(list);
+            SelectedItem = list;
         }
 
         private bool CanExecuteCreateNewListCommand() => ListCollection != null;
@@ -92,22 +96,34 @@ namespace ListApplicationFinal.ViewModels
 
         private async void ExecuteModifyListCommand()
         {
-            await NavigationService.NavigateAsync("SingleListPage", new NavigationParameters{{ KnownNavigationParameters.XamlParam, SelectedItem}}, true);
+            await NavigationService.NavigateAsync("SingleListPage", new NavigationParameters{{ KnownNavigationParameters.XamlParam, SelectedItem}});
         }
 
         private bool CanExecuteModifyListCommand() => CanModifyOrDelete;
 
         #endregion
 
-        #region Initiation
+        #region Initialization
 
         protected override async void ConfigureOnNavigatedTo(INavigationParameters parameters)
         {
-            if (!_recentlyConstructed) return;
-            _recentlyConstructed = false;
+            await InitializationTask;
+        }
 
-            var list = await _todoService.GetAllListsAsync();
-            ListCollection = new ObservableCollection<TodoList>(list);
+        protected override void ConfigureOnNavigatingTo(INavigationParameters parameters)
+        {
+            Init();
+        }
+
+        private Task InitializationTask { get; set; }
+
+        private void Init()
+        {
+            InitializationTask = Task.Run(() =>
+            {
+                var list = _todoService.GetAllLists();
+                ListCollection = new ObservableCollection<TodoList>(list);
+            });
         }
 
         #endregion

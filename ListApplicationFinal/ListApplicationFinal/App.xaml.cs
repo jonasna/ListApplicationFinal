@@ -17,13 +17,11 @@ namespace ListApplicationFinal
     public partial class App : PrismApplication
     {
         private const string LoginPageUri = "/MasterPage/NavBarPage/LoginPage";
-        private const string MainPageUri = "/MasterPage/NavBarPage/MainPage";
+        private const string MainPageUri = "/MasterPage/NavBarPage/ListsOverviewPage";
         
         public App() : this(null) { }
 
         public App(IPlatformInitializer initializer) : base(initializer) { }
-
-        private IContainerRegistry _containerRegistry;
 
         protected override async void OnInitialized()
         {
@@ -38,31 +36,19 @@ namespace ListApplicationFinal
             {
                 await NavigationService.NavigateAsync(MainPageUri);
             }
-
         }
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            _containerRegistry = containerRegistry;
-
             containerRegistry.RegisterSingleton<IApplicationUserService, ApplicationUserService>();
+            containerRegistry.RegisterSingleton<IDialogService, DialogService>();
             containerRegistry.RegisterSingleton<ITodoService, TodoService>();
 
             containerRegistry.RegisterForNavigation<NavBarPage, NavBarPageViewModel>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();
-            containerRegistry.RegisterForNavigation<MainPage, MainPageViewModel>();
             containerRegistry.RegisterForNavigation<ListsOverviewPage, ListsOverviewPageViewModel>();
             containerRegistry.RegisterForNavigation<MasterPage, MasterPageViewModel>(); // Master detail
             containerRegistry.RegisterForNavigation<SingleListPage, SingleListPageViewModel>();
-
-            var dialogConfig = new DialogConfigurationBuilder
-            {
-                [DialogSetting.QuestionDialogBackgroundColor] = "InfoModalBackgroundColor",
-                [DialogSetting.AcceptButtonColor] = "OkTextColor",
-                [DialogSetting.CancelButtonColor] = "NotOkTextColor"
-            };
-
-            _containerRegistry.RegisterSingleton<IDialogService, DialogService>();
         }
     }
 }

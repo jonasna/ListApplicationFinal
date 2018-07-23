@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using ListApplicationFinal.DataServices;
-using Prism;
-using Prism.Ioc;
 using Xamarin.Forms.Xaml;
 
 namespace ListApplicationFinal.Markup

@@ -1,4 +1,7 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using ListApplicationFinal.DataServices;
 using ListApplicationFinal.Domain;
 using Prism.Commands;
 using Prism.Navigation;
@@ -13,28 +16,34 @@ namespace ListApplicationFinal.ViewModels
 
     public class SingleListPageViewModel : VmBase
     {
-        private TodoList Todo { get; set; }
-        
-        public SingleListPageViewModel(INavigationService navigationService) : base(navigationService)
+        private readonly ITodoStore _todoStore;
+
+        public SingleListPageViewModel(INavigationService navigationService,
+            ITodoStore todoStore) : base(navigationService)
         {
+            _todoStore = todoStore;
+
+
         }
+
+        private string ListId { get; set; }
 
         #region Properties
 
-        private ObservableCollection<TodoListItem> _toDoCollection;
-        public ObservableCollection<TodoListItem> ToDoCollection
+        private ObservableCollection<ITodo> _toDos;
+        public ObservableCollection<ITodo> Todos
         {
-            get => _toDoCollection;
-            set => SetProperty(ref _toDoCollection, value);
+            get => _toDos;
+            set => SetProperty(ref _toDos, value);
         }
 
         #endregion
 
-        private DelegateCommand<TodoListItem> _itemTappedCommand;
-        public DelegateCommand<TodoListItem> ItemTappedCommand =>
-            _itemTappedCommand ?? (_itemTappedCommand = new DelegateCommand<TodoListItem>(ExecuteItemTappedCommand));
+        private DelegateCommand<ITodo> _itemTappedCommand;
+        public DelegateCommand<ITodo> ItemTappedCommand =>
+            _itemTappedCommand ?? (_itemTappedCommand = new DelegateCommand<ITodo>(ExecuteItemTappedCommand));
 
-        private void ExecuteItemTappedCommand(TodoListItem tappedItem)
+        private void ExecuteItemTappedCommand(ITodo tappedItem)
         {
             tappedItem.Complete = !tappedItem.Complete;
         }
@@ -47,7 +56,7 @@ namespace ListApplicationFinal.ViewModels
         {
             if (itemIndex.HasValue)
             {
-                ToDoCollection.RemoveAt(itemIndex.Value);
+                Todos.RemoveAt(itemIndex.Value);
             }
         }
 
@@ -55,34 +64,33 @@ namespace ListApplicationFinal.ViewModels
         public DelegateCommand<IDraggingCommandArgs> DraggingCommand =>
             _draggingCommand ?? (_draggingCommand = new DelegateCommand<IDraggingCommandArgs>(ExecuteDraggingCommand));
 
-        private void ExecuteDraggingCommand(IDraggingCommandArgs dragginArgs)
+        private async void ExecuteDraggingCommand(IDraggingCommandArgs draggingArgs)
         {
-            if (dragginArgs == null) return;
-            ToDoCollection.Move(dragginArgs.OldIndex, dragginArgs.NewIndex);
+            if (draggingArgs == null) return;
+
+            await Task.Delay(100); // If this is not here the visual list will not be updated correctly
+            Todos.Move(draggingArgs.OldIndex, draggingArgs.NewIndex);
         }
 
-        protected override void ConfigureOnNavigatedTo(INavigationParameters parameters)
+        #region Initialization
+
+        protected override async void ConfigureOnNavigatedTo(INavigationParameters parameters)
         {
-            if (ToDoCollection == null && Todo != null)
+            if (parameters.TryGetValue(KnownNavigationParameters.XamlParam, out ITodoList todo))
             {
-                ToDoCollection = new ObservableCollection<TodoListItem>(Todo);
-            }
-        }
-
-        protected override void ConfigureOnNavigatingTo(INavigationParameters parameters)
-        {
-            if (parameters.TryGetValue(KnownNavigationParameters.XamlParam, out TodoList todo))
-            {
-                Todo = todo;
-
-                if (Todo.Count == 0)
-                {
-                    Todo.Add(new TodoListItem("Test", "Swagboy testing"));
-                    Todo.Add(new TodoListItem("Another Test Item", "This description is slighty longer than the one above. This is very exciting"));
-                }
-
                 Title = todo.Name;
+                ListId = todo.Id;
+                Todos = new ObservableCollection<ITodo>(await Load());
             }
         }
+
+        private async Task<IEnumerable<ITodo>> Load()
+        {
+            var list = await _todoStore.GetListAsync(ListId);
+            return list.ItemCollection;
+        }
+
+        #endregion
+
     }
 }

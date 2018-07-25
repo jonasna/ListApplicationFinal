@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using ListApplicationFinal.Domain;
 using ListApplicationFinal.ViewModels;
 using Syncfusion.ListView.XForms;
 using Xamarin.Forms;
@@ -27,7 +28,7 @@ namespace ListApplicationFinal.Converters
                 if (dragArgs.Action == DragAction.Drop &&
                     dragArgs.NewIndex != dragArgs.OldIndex)
                 {
-                   return new DraggingCommandArgs(dragArgs);
+                    return new DraggingCommandArgs(dragArgs);
                 }
             }
 

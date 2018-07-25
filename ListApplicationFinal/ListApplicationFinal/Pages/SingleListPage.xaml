@@ -7,7 +7,7 @@
              xmlns:converters="clr-namespace:ListApplicationFinal.Converters;assembly=ListApplicationFinal"
              x:Class="ListApplicationFinal.Pages.SingleListPage"
              BackgroundColor="{StaticResource PrimaryBackgroundColor}"
-             Padding="45"
+             Padding="35"
              Title="{Binding Title}">
 
     <ContentPage.Resources>
@@ -18,12 +18,13 @@
     </ContentPage.Resources>
 
     <xForms:SfListView x:Name="ToDoListView"
-                           ItemsSource="{Binding ToDoCollection}"
-                           SelectionBackgroundColor="Transparent"
-                           ItemSpacing="0,0,0,10"
-                           AutoFitMode="Height"
+                           ItemsSource="{Binding Todos}"
+                           ItemSpacing="0,0,0,15"
+                           AutoFitMode="None"
                            DragStartMode="OnHold"
                            AllowSwiping="True"
+                           SelectionMode="None"
+                           ItemSize="55"
                            >
 
         <xForms:SfListView.Behaviors>
@@ -52,9 +53,9 @@
 
             <DataTemplate>
 
-                <Frame CornerRadius="10" Padding="0" HasShadow="True" BackgroundColor="{StaticResource ButtonColor}">
+                <Frame CornerRadius="5" Padding="0" HasShadow="True" BackgroundColor="{StaticResource ButtonColor}">
 
-                    <Grid>
+                    <Grid Padding="5">
 
                         <Grid.GestureRecognizers>
 
@@ -64,32 +65,40 @@
                         </Grid.GestureRecognizers>
 
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="0.5*"/>
+                            <ColumnDefinition Width="0.5*"/>
                         </Grid.ColumnDefinitions>
 
                         <buttons:SfCheckBox x:Name="CheckBox"
                                             Grid.Column="0"
                                             IsChecked="{Binding Complete}"
-                                            HorizontalOptions="StartAndExpand"
+                                            HorizontalOptions="Fill"
                                             VerticalOptions="Center"
+                                            Scale="1.5"
+                                            Margin="5,0,5,0"
                                             InputTransparent="True"
-                                            Margin="8,0,0,0"
-                                            Padding="10"
-                                            Text="{Binding Name}"
-                                            TextColor="White"
-                                            FontSize="14"
-                                            FontAttributes="Bold"
+                                            Padding="0"
                                             UncheckedColor="{StaticResource NavigationBackgroundColor}"
                                             CheckedColor="{StaticResource NavigationBackgroundColor}"/>
 
-                        <Label Text="{Binding Description}"
+                        <Label Text="{Binding Name}"
                                Grid.Column="1"
-                               HorizontalOptions="Start"
+                               HorizontalOptions="StartAndExpand"
                                VerticalOptions="Center"
-                               Margin="0,0,10,0"
+                               FontAttributes="Bold"
+                               FontSize="17"
+                               TextColor="White"
+                               InputTransparent="True"/>
+
+                        <Label Text="{Binding Description}"
+                               Grid.Column="2"
+                               HorizontalOptions="StartAndExpand"
+                               VerticalOptions="Center"
                                FontAttributes="Italic"
-                               TextColor="White"/>
+                               FontSize="15"
+                               TextColor="White"
+                               InputTransparent="True"/>
 
                     </Grid>
                 </Frame>

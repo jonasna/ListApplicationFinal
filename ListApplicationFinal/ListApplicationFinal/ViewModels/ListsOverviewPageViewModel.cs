@@ -11,33 +11,34 @@ namespace ListApplicationFinal.ViewModels
     public class ListsOverviewPageViewModel : VmBase
     {
 
-        private readonly ITodoService _todoService;
         private readonly IApplicationUserService _userService;
         private readonly IDialogService _dialogService;
+        private readonly ITodoStore _todoStore;
 
         public ListsOverviewPageViewModel(INavigationService navigationService,
-                                          ITodoService todoService,
+                                          ITodoStore todoStore,
                                           IApplicationUserService userService,
                                           IDialogService dialogService) : base(navigationService)
 
         {
             Title = "List Collection";
-            _todoService = todoService;
+
             _userService = userService;
             _dialogService = dialogService;
+            _todoStore = todoStore;
         }
 
         #region Properties
 
-        private ObservableCollection<TodoList> _listCollection;
-        public ObservableCollection<TodoList> ListCollection
+        private ObservableCollection<ITodoList> _listCollection = new ObservableCollection<ITodoList>();
+        public ObservableCollection<ITodoList> ListCollection
         {
             get => _listCollection;
             set => SetProperty(ref _listCollection, value);
         }
 
-        private TodoList _selectedItem;
-        public TodoList SelectedItem
+        private ITodoList _selectedItem;
+        public ITodoList SelectedItem
         {
             get => _selectedItem;
             set => SetProperty(ref _selectedItem, value);
@@ -58,10 +59,13 @@ namespace ListApplicationFinal.ViewModels
             var listName = await _dialogService.StringQueryDialog("Please enter the list name");
             if (listName == null) return;
 
-            TodoList list;
-            if ((list = _todoService.AddList(new TodoList(listName, _userService.DisplayName))) == null) return;
-            ListCollection.Add(list);
-            SelectedItem = list;
+            var list = await _todoStore.AddListAsync(new ListDto {Name = listName, Owner = _userService.DisplayName });
+
+            if (list != null)
+            {
+                ListCollection.Add(list);
+                SelectedItem = list;
+            }
         }
 
         private bool CanExecuteCreateNewListCommand() => ListCollection != null;
@@ -75,13 +79,11 @@ namespace ListApplicationFinal.ViewModels
         public DelegateCommand DeleteListCommand =>
             _deleteListCommand ?? (_deleteListCommand = new DelegateCommand(ExecuteDeleteListCommand, CanExecuteDeleteListCommand)).ObservesProperty(() => SelectedItem);
 
-        private void ExecuteDeleteListCommand()
+        private async void ExecuteDeleteListCommand()
         {
-            if (_todoService.RemoveList(SelectedItem) != null)
-            {
-                ListCollection.Remove(SelectedItem);
-                SelectedItem = null;
-            }
+            if (!await _todoStore.DeleteListAsync(SelectedItem.Id)) return;
+            ListCollection.Remove(SelectedItem);
+            SelectedItem = null;
         }
 
         private bool CanExecuteDeleteListCommand() => CanModifyOrDelete;
@@ -105,26 +107,12 @@ namespace ListApplicationFinal.ViewModels
 
         #region Initialization
 
-        protected override async void ConfigureOnNavigatedTo(INavigationParameters parameters)
+        protected override async void ConfigureOnNavigatingTo(INavigationParameters parameters)
         {
-            await InitializationTask;
-        }
-
-        protected override void ConfigureOnNavigatingTo(INavigationParameters parameters)
-        {
-            Init();
+            ListCollection = new ObservableCollection<ITodoList>(await _todoStore.GetAllListsAsync());
         }
 
         private Task InitializationTask { get; set; }
-
-        private void Init()
-        {
-            InitializationTask = Task.Run(() =>
-            {
-                var list = _todoService.GetAllLists();
-                ListCollection = new ObservableCollection<TodoList>(list);
-            });
-        }
 
         #endregion
     }

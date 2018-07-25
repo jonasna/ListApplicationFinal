@@ -8,6 +8,7 @@ using ListApplicationFinal.Pages;
 using ListApplicationFinal.ViewModels;
 using DialogServices.Register;
 using DialogServices.Service;
+using ListApplicationFinal.Domain;
 using Prism.Mvvm;
 using Xamarin.Forms;
 
@@ -42,7 +43,7 @@ namespace ListApplicationFinal
         {
             containerRegistry.RegisterSingleton<IApplicationUserService, ApplicationUserService>();
             containerRegistry.RegisterSingleton<IDialogService, DialogService>();
-            containerRegistry.RegisterSingleton<ITodoService, TodoService>();
+            containerRegistry.RegisterSingleton<ITodoStore, FakeTodoStore>();
 
             containerRegistry.RegisterForNavigation<NavBarPage, NavBarPageViewModel>();
             containerRegistry.RegisterForNavigation<LoginPage, LoginPageViewModel>();

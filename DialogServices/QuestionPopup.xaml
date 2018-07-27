@@ -3,6 +3,7 @@
                           xmlns:dialogServices="clr-namespace:DialogServices;assembly=DialogServices"
                           xmlns="http://xamarin.com/schemas/2014/forms" 
                           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                          xmlns:markup="clr-namespace:DialogServices.Markup;assembly=DialogServices"
                           x:Class="DialogServices.QuestionPopup">
 
     <Frame HorizontalOptions="Center"
@@ -10,6 +11,7 @@
            CornerRadius="10"
            Padding="5"
            HasShadow="True"
+           BackgroundColor="{markup:ColorResource ResourcePath=PrimaryBackgroundColor}"
            x:Name="Frame">
 
         <Grid WidthRequest="200" HeightRequest="200">
@@ -26,13 +28,14 @@
                    Grid.Row="0"
                    FontSize="19"
                    FontAttributes="Bold"
-                   TextColor="OrangeRed"/>
+                   TextColor="{markup:ColorResource ResourcePath=ButtonColor}"/>
 
             <Label Text="{Binding Question}"
                    HorizontalOptions="CenterAndExpand"
                    VerticalOptions="CenterAndExpand"
                    Grid.Row="1"
                    FontSize="16"
+                   TextColor="{markup:ColorResource ResourcePath=ButtonColor}"
                    LineBreakMode="CharacterWrap"
                    Margin="8,-15,0,0"/>
 
@@ -51,6 +54,8 @@
                         x:Name="CancelButton"
                         FontSize="16"
                         CornerRadius="10"
+                        BackgroundColor="{markup:ColorResource ResourcePath=ButtonColor}"
+                        TextColor="White"
                         Clicked="HandleCancelBtnClicked"/>
 
                 <Button Text="{Binding OkBtnText}"
@@ -61,6 +66,8 @@
                         x:Name="AcceptButton"
                         FontSize="16"
                         CornerRadius="10"
+                        BackgroundColor="{markup:ColorResource ResourcePath=ButtonColor}"
+                        TextColor="White"
                         Clicked="HandleOkBtnClicked"/>
 
             </Grid>

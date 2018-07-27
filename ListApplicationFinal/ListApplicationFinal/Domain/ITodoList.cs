@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace ListApplicationFinal.Domain
 {
@@ -7,7 +8,7 @@ namespace ListApplicationFinal.Domain
         string Id { get; set; }
         string Name { get; set; }
         string Owner { get; set; }
-        string PointOfCreation { get; set; }
+        DateTime PointOfCreation { get; set; }
         IEnumerable<ITodo> ItemCollection { get; set; }
     }
 }

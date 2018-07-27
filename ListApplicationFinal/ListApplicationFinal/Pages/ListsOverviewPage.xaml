@@ -17,14 +17,16 @@
                    FontSize="19"
                    HorizontalTextAlignment="Center"
                    HorizontalOptions="Center"
-                   Margin="0,20,0,0"/>
+                   Margin="0,20,0,0"
+                   TextColor="{StaticResource ButtonColor}"/>
             
             <xForms:SfListView ItemsSource="{Binding ListCollection}"
                                SelectionBackgroundColor="{StaticResource NavigationBackgroundColor}"
-                               
                                IsStickyHeader="True"
                                Margin="45,10,45,0"
-                               SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+                               SelectedItem="{Binding SelectedItem, Mode=TwoWay}"
+                               
+                               IsStickyFooter="True">
 
                 <xForms:SfListView.HeaderTemplate>
 
@@ -40,11 +42,11 @@
 
                             </Grid.ColumnDefinitions>
 
-                            <Label Grid.Column="0" Text="List name" FontSize="17" FontAttributes="Bold" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="0" Text="List name" FontSize="17" FontAttributes="Bold" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Center" TextColor="{StaticResource ButtonColor}"/>
 
-                            <Label Grid.Column="1" Text="Added by" FontSize="17" FontAttributes="Bold" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="1" Text="Added by" FontSize="17" FontAttributes="Bold" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Center" TextColor="{StaticResource ButtonColor}"/>
 
-                            <Label Grid.Column="2" Text="Added on" FontSize="17" FontAttributes="Bold" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Center"/>
+                            <Label Grid.Column="2" Text="Added on" FontSize="17" FontAttributes="Bold" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" HorizontalTextAlignment="Center" TextColor="{StaticResource ButtonColor}"/>
 
                         </Grid>
 
@@ -79,7 +81,8 @@
                                    HorizontalTextAlignment="Center"
                                    FontSize="16"
                                    FontAttributes="Bold"
-                                   Margin="0,0,0,-6"/>
+                                   Margin="0,0,0,-6"
+                                   TextColor="{StaticResource ButtonColor}"/>
 
                             <Label Grid.Column="1"
                                    Grid.Row="0"
@@ -88,24 +91,26 @@
                                    VerticalOptions="CenterAndExpand"
                                    HorizontalTextAlignment="Center"
                                    FontAttributes="Italic"
-                                   Margin="0,0,0,-6"/>
+                                   Margin="0,0,0,-6"
+                                   TextColor="{StaticResource ButtonColor}"/>
 
                             <Label Grid.Column="2"
                                    Grid.Row="0"
-                                   Text="{Binding PointOfCreation}"
+                                   Text="{Binding PointOfCreation, StringFormat='{0:dd/MM H:mm}'}"
                                    HorizontalOptions="CenterAndExpand"
                                    VerticalOptions="CenterAndExpand"
                                    HorizontalTextAlignment="Center"
                                    FontAttributes="Italic"
-                                   Margin="0,0,0,-6"/>
+                                   Margin="0,0,0,-6"
+                                   TextColor="{StaticResource ButtonColor}"/>
 
-                            <BoxView   VerticalOptions="End"
-                                       HorizontalOptions="FillAndExpand"
-                                       Grid.Row="1"
-                                       Grid.Column="0"
-                                       Grid.ColumnSpan="3"
-                                       HeightRequest="1"  
-                                       Color="#5b5d68"></BoxView>
+                            <BoxView VerticalOptions="End"
+                                     HorizontalOptions="FillAndExpand"
+                                     Grid.Row="1"
+                                     Grid.Column="0"
+                                     Grid.ColumnSpan="3"
+                                     HeightRequest="1"  
+                                     Color="#5b5d68"></BoxView>
 
                         </Grid>
 
@@ -118,15 +123,15 @@
             <StackLayout Orientation="Horizontal" Margin="45,20,45,30" MinimumHeightRequest="70">
 
                 <buttons:ImageButton Source="{markup:ImageResource add.svg}" WidthRequest="70" HeightRequest="70" CornerRadius="35" HorizontalOptions="CenterAndExpand"
-                                     VerticalOptions="CenterAndExpand" 
+                                     VerticalOptions="CenterAndExpand" HasShadow="False"
                                      Command="{Binding CreateNewListCommand}"></buttons:ImageButton>
 
                 <buttons:ImageButton Source="{markup:ImageResource eye.svg}" WidthRequest="70" HeightRequest="70" CornerRadius="35" HorizontalOptions="CenterAndExpand"
-                                     VerticalOptions="CenterAndExpand" 
+                                     VerticalOptions="CenterAndExpand" HasShadow="False"
                                      Command="{Binding ModifyListCommand}"></buttons:ImageButton>
 
                 <buttons:ImageButton Source="{markup:ImageResource delete.svg}" WidthRequest="70" HeightRequest="70" CornerRadius="35" HorizontalOptions="CenterAndExpand"
-                                     VerticalOptions="CenterAndExpand"
+                                     VerticalOptions="CenterAndExpand" HasShadow="False"
                                      Command="{Binding DeleteListCommand}"></buttons:ImageButton>
 
             </StackLayout>

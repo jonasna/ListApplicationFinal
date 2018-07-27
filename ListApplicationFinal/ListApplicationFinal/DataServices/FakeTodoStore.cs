@@ -51,7 +51,7 @@ namespace ListApplicationFinal.DataServices
         public string Id { get; set; }
         public string Name { get; set; }
         public string Owner { get; set; }
-        public string PointOfCreation { get; set; } = DateTime.Now.ToTodoFormatString();
+        public DateTime PointOfCreation { get; set; } = DateTime.Now;
         public IEnumerable<ITodo> ItemCollection { get; set; } = new ITodo[0];
     }
 
@@ -72,9 +72,9 @@ namespace ListApplicationFinal.DataServices
                 var todo = new ListDto
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Name = $"List {i}",
+                    Name = $"List {i+1}",
                     Owner = "SwagBoy",
-                    PointOfCreation = DateTime.Now.ToTodoFormatString(),
+                    PointOfCreation = DateTime.Now.AddMinutes(-i),
                     ItemCollection = new List<ITodo>
                     {
                         new TodoItemDto
@@ -152,6 +152,9 @@ namespace ListApplicationFinal.DataServices
             return Task.Run(() =>
             {
                 if (!_collection.ContainsKey(id))
+                    return null;
+
+                if (id != item.Id)
                     return null;
 
                 _collection[id] = CopyModelFull(item);

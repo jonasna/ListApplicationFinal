@@ -107,5 +107,15 @@ namespace DialogServices
         protected abstract void OnInitiated();
 
         #endregion
+
+        protected static TType GetApplicationResource<TType>(string key)
+        {
+            return (TType)Application.Current.Resources[key];
+        }
+
+        protected static Color GetApplicationResourceColor(string key)
+        {
+            return GetApplicationResource<Color>(key);
+        }
     }
 }

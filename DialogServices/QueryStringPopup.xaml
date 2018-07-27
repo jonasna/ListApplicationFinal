@@ -4,13 +4,15 @@
                           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
                           xmlns:dialogServices="clr-namespace:DialogServices;assembly=DialogServices"
                           xmlns:system="clr-namespace:System;assembly=netstandard"
+                          xmlns:markup="clr-namespace:DialogServices.Markup;assembly=DialogServices"
                           x:Class="DialogServices.QueryStringPopup">
-
+    
     <Frame HorizontalOptions="Center"
            VerticalOptions="Center"
            CornerRadius="10"
            Padding="5"
            HasShadow="True"
+           BackgroundColor="{markup:ColorResource ResourcePath=PrimaryBackgroundColor}"
            x:Name="Frame">
 
         <Grid WidthRequest="200" HeightRequest="200">
@@ -24,11 +26,15 @@
             <Label Grid.Row="0" Text="{Binding QueryQuestion}"
                    HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand"
                    LineBreakMode="CharacterWrap"
-                   FontSize="16" FontAttributes="Bold"/>
+                   FontSize="16" FontAttributes="Bold"
+                   TextColor="{markup:ColorResource ResourcePath=ButtonColor}"
+                   x:Name="QuestionLabel"/>
             
             <Entry Grid.Row="1"
+                   x:Name="QuestionAnswerEntry"
                    Text="{Binding Input}"
                    FontSize="22"
+                   TextColor="{markup:ColorResource ResourcePath=ButtonColor}"
                    HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" HorizontalTextAlignment="Center"/>
 
             <Grid Grid.Row="2">
@@ -38,8 +44,8 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <Button Text="Cancel" Clicked="HandleCancelBtnClicked" Grid.Column="0" CornerRadius="10"  FontSize="16"/>
-                <Button Text="Confirm" Clicked="HandleConfirmBtnClicked" Grid.Column="1" IsEnabled="{Binding CanExecute}" CornerRadius="10" FontSize="16"/>
+                <Button x:Name="CancelButton" BackgroundColor="{markup:ColorResource ResourcePath=ButtonColor}" TextColor="White" Text="Cancel" Clicked="HandleCancelBtnClicked" Grid.Column="0" CornerRadius="10"  FontSize="16"/>
+                <Button x:Name="ConfirmButton" BackgroundColor="{markup:ColorResource ResourcePath=ButtonColor}" TextColor="White" Text="Confirm" Clicked="HandleConfirmBtnClicked" Grid.Column="1" IsEnabled="{Binding CanExecute}" CornerRadius="10" FontSize="16"/>
 
             </Grid>
 

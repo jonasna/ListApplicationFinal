@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using ListApplicationFinal.DataServices;
 using ListApplicationFinal.Domain;
@@ -22,19 +21,31 @@ namespace ListApplicationFinal.ViewModels
             ITodoStore todoStore) : base(navigationService)
         {
             _todoStore = todoStore;
-
-
         }
 
-        private string ListId { get; set; }
+        #region Properties and fields
 
-        #region Properties
+        private bool _changeMade;
+        private bool ChangeMade
+        {
+            get => _changeMade;
+            set => SetProperty(ref _changeMade, value);
+        }
+        
+        public ITodoList List { get; set; }
 
         private ObservableCollection<ITodo> _toDos;
         public ObservableCollection<ITodo> Todos
         {
             get => _toDos;
             set => SetProperty(ref _toDos, value);
+        }
+
+        private bool _isRefreshing = true;
+        public bool IsRefreshing
+        {
+            get => _isRefreshing;
+            set => SetProperty(ref _isRefreshing, value);
         }
 
         #endregion
@@ -46,6 +57,7 @@ namespace ListApplicationFinal.ViewModels
         private void ExecuteItemTappedCommand(ITodo tappedItem)
         {
             tappedItem.Complete = !tappedItem.Complete;
+            ChangeMade = true;
         }
 
         private DelegateCommand<int?> _swipeCommand;
@@ -57,6 +69,7 @@ namespace ListApplicationFinal.ViewModels
             if (itemIndex.HasValue)
             {
                 Todos.RemoveAt(itemIndex.Value);
+                ChangeMade = true;
             }
         }
 
@@ -70,27 +83,52 @@ namespace ListApplicationFinal.ViewModels
 
             await Task.Delay(100); // If this is not here the visual list will not be updated correctly
             Todos.Move(draggingArgs.OldIndex, draggingArgs.NewIndex);
+            ChangeMade = true;
         }
+
+        private DelegateCommand _saveCommand;
+        public DelegateCommand SaveCommand =>
+            _saveCommand ?? (_saveCommand = new DelegateCommand(ExecuteSaveCommand, CanExecuteSaveCommand)).ObservesProperty(() => ChangeMade);
+
+        private async void ExecuteSaveCommand()
+        {
+            List.ItemCollection = Todos;
+            await _todoStore.UpdateListAsync(List.Id, List);
+            ChangeMade = false;
+        }
+
+        private bool CanExecuteSaveCommand() => ChangeMade;
 
         #region Initialization
 
-        protected override async void ConfigureOnNavigatedTo(INavigationParameters parameters)
+        protected override void ConfigureOnNavigatingTo(INavigationParameters parameters)
         {
             if (parameters.TryGetValue(KnownNavigationParameters.XamlParam, out ITodoList todo))
             {
-                Title = todo.Name;
-                ListId = todo.Id;
-                Todos = new ObservableCollection<ITodo>(await Load());
+                List = todo;
             }
         }
 
-        private async Task<IEnumerable<ITodo>> Load()
+        protected override async void ConfigureOnNavigatedTo(INavigationParameters parameters)
         {
-            var list = await _todoStore.GetListAsync(ListId);
-            return list.ItemCollection;
+            if (parameters.ContainsKey(KnownNavigationParameters.XamlParam))
+            {
+                await Refresh();
+            }
+        }
+
+        private async Task Refresh()
+        {
+            IsRefreshing = true;
+
+            List = await _todoStore.GetListAsync(List.Id);
+            Todos = new ObservableCollection<ITodo>(List.ItemCollection);
+
+            await Task.Delay(100); // For testing purposes
+            IsRefreshing = false;
+            ChangeMade = false;
         }
 
         #endregion
-
     }
 }

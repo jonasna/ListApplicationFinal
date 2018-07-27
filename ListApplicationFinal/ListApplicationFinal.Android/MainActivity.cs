@@ -1,19 +1,11 @@
-﻿using System;
-using System.Linq;
-using Debug = System.Diagnostics.Debug;
+﻿using Debug = System.Diagnostics.Debug;
 using Android.App;
 using Android.Content.PM;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.OS;
 using FFImageLoading.Forms.Platform;
 using ListApplicationFinal.Droid.CustomRenderers;
-using ListApplicationFinal.Pages;
 using Prism;
 using Prism.Ioc;
-using Xamarin.Forms;
-using Xamarin.Forms.Platform.Android;
 
 namespace ListApplicationFinal.Droid
 {
@@ -32,14 +24,13 @@ namespace ListApplicationFinal.Droid
             base.OnCreate(bundle);
 
             global::Xamarin.Forms.Forms.Init(this, bundle);
-
+            
             CachedImageRenderer.Init(true);
             ClickableFrameRenderer.Init();
 
             try
             {
                 LoadApplication(new App(new AndroidInitializer()));
-                Window.SetStatusBarColor(Color.FromHex("#0e9086").ToAndroid()); // Button background color
             }
             catch (System.Exception e)
             {
@@ -67,7 +58,6 @@ namespace ListApplicationFinal.Droid
         public void RegisterTypes(IContainerRegistry container)
         {
             // Register any platform specific implementations
-
         }
     }
 

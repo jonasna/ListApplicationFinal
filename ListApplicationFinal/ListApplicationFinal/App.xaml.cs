@@ -6,11 +6,7 @@ using Xamarin.Forms.Xaml;
 using ListApplicationFinal.DataServices;
 using ListApplicationFinal.Pages;
 using ListApplicationFinal.ViewModels;
-using DialogServices.Register;
 using DialogServices.Service;
-using ListApplicationFinal.Domain;
-using Prism.Mvvm;
-using Xamarin.Forms;
 
 [assembly: XamlCompilation (XamlCompilationOptions.Compile)]
 namespace ListApplicationFinal

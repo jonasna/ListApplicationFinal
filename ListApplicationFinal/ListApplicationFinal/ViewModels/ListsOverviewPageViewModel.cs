@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using DialogServices.Service;
 using ListApplicationFinal.DataServices;
@@ -30,7 +31,7 @@ namespace ListApplicationFinal.ViewModels
 
         #region Properties
 
-        private ObservableCollection<ITodoList> _listCollection = new ObservableCollection<ITodoList>();
+        private ObservableCollection<ITodoList> _listCollection;
         public ObservableCollection<ITodoList> ListCollection
         {
             get => _listCollection;
@@ -44,7 +45,14 @@ namespace ListApplicationFinal.ViewModels
             set => SetProperty(ref _selectedItem, value);
         }
 
-        private bool CanModifyOrDelete => SelectedItem != null;
+        private bool _isRefreshing;
+        public bool IsRefreshing
+        {
+            get => _isRefreshing;
+            set => SetProperty(ref _isRefreshing, value);
+        }
+
+        private bool CanModifyOrDelete => !IsRefreshing && SelectedItem != null;
 
         #endregion
 
@@ -52,7 +60,7 @@ namespace ListApplicationFinal.ViewModels
 
         private DelegateCommand _createNewListCommand;
         public DelegateCommand CreateNewListCommand =>
-            _createNewListCommand ?? (_createNewListCommand = new DelegateCommand(ExecuteCreateNewListCommand, CanExecuteCreateNewListCommand)).ObservesProperty(() => ListCollection);
+            _createNewListCommand ?? (_createNewListCommand = new DelegateCommand(ExecuteCreateNewListCommand, CanExecuteCreateNewListCommand)).ObservesProperty(() => ListCollection).ObservesProperty(() => IsRefreshing);
 
         private async void ExecuteCreateNewListCommand()
         {
@@ -63,12 +71,12 @@ namespace ListApplicationFinal.ViewModels
 
             if (list != null)
             {
-                ListCollection.Add(list);
+                ListCollection.Insert(0, list);
                 SelectedItem = list;
             }
         }
 
-        private bool CanExecuteCreateNewListCommand() => ListCollection != null;
+        private bool CanExecuteCreateNewListCommand() => !IsRefreshing && ListCollection != null;
 
         #endregion
 
@@ -77,7 +85,8 @@ namespace ListApplicationFinal.ViewModels
         private DelegateCommand _deleteListCommand;
 
         public DelegateCommand DeleteListCommand =>
-            _deleteListCommand ?? (_deleteListCommand = new DelegateCommand(ExecuteDeleteListCommand, CanExecuteDeleteListCommand)).ObservesProperty(() => SelectedItem);
+            _deleteListCommand ?? (_deleteListCommand = new DelegateCommand(ExecuteDeleteListCommand, CanExecuteDeleteListCommand)).ObservesProperty(() => SelectedItem)
+            .ObservesProperty(() => IsRefreshing);
 
         private async void ExecuteDeleteListCommand()
         {
@@ -94,7 +103,7 @@ namespace ListApplicationFinal.ViewModels
 
         private DelegateCommand _modifyListCommand;
         public DelegateCommand ModifyListCommand =>
-            _modifyListCommand ?? (_modifyListCommand = new DelegateCommand(ExecuteModifyListCommand, CanExecuteModifyListCommand)).ObservesProperty(() => SelectedItem);
+            _modifyListCommand ?? (_modifyListCommand = new DelegateCommand(ExecuteModifyListCommand, CanExecuteModifyListCommand)).ObservesProperty(() => SelectedItem).ObservesProperty(() => IsRefreshing);
 
         private async void ExecuteModifyListCommand()
         {
@@ -109,11 +118,20 @@ namespace ListApplicationFinal.ViewModels
 
         protected override async void ConfigureOnNavigatingTo(INavigationParameters parameters)
         {
-            ListCollection = new ObservableCollection<ITodoList>(await _todoStore.GetAllListsAsync());
+            if (ListCollection == null)
+            {
+                await Refresh();
+            }
         }
 
-        private Task InitializationTask { get; set; }
-
         #endregion
+
+        private async Task Refresh()
+        {
+            IsRefreshing = true;
+            var lists = await _todoStore.GetAllListsAsync();
+            ListCollection = new ObservableCollection<ITodoList>(lists.OrderByDescending(list => list.PointOfCreation));
+            IsRefreshing = false;
+        }
     }
 }

@@ -8,6 +8,7 @@
     <None Remove="Images\add.svg" />
     <None Remove="Images\delete.svg" />
     <None Remove="Images\eye.svg" />
+    <None Remove="Images\save.svg" />
     <None Remove="Images\save_changes.svg" />
   </ItemGroup>
 
@@ -15,7 +16,7 @@
     <EmbeddedResource Include="Images\delete.svg" />
     <EmbeddedResource Include="Images\eye.svg" />
     <EmbeddedResource Include="Images\add.svg" />
-    <EmbeddedResource Include="Images\save_changes.svg" />
+    <EmbeddedResource Include="Images\save.svg" />
   </ItemGroup>
 
   <ItemGroup>

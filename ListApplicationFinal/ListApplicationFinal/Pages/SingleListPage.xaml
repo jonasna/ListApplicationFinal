@@ -5,7 +5,9 @@
              xmlns:buttons="clr-namespace:Syncfusion.XForms.Buttons;assembly=Syncfusion.Buttons.XForms"
              xmlns:behaviors="clr-namespace:Prism.Behaviors;assembly=Prism.Forms"
              xmlns:converters="clr-namespace:ListApplicationFinal.Converters;assembly=ListApplicationFinal"
-             xmlns:xForms1="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms"            
+             xmlns:xForms1="clr-namespace:Syncfusion.SfBusyIndicator.XForms;assembly=Syncfusion.SfBusyIndicator.XForms"
+             xmlns:markup="clr-namespace:ListApplicationFinal.Markup;assembly=ListApplicationFinal"
+             xmlns:buttons1="clr-namespace:ListApplicationFinal.CustomControls.Buttons;assembly=ListApplicationFinal"
              x:Class="ListApplicationFinal.Pages.SingleListPage"
              BackgroundColor="{StaticResource PrimaryBackgroundColor}"
              Padding="25,20,20,20"
@@ -14,72 +16,67 @@
     <ContentPage.Resources>
 
         <converters:SwipeEndedEventArgsConverter x:Key="SwipeArgsConverter"/>
-        <converters:DraggingEventArgsConverter x:Key="DraggingArgsConverter"/>
+        <converters:DraggedEventArgsConverter x:Key="DraggedArgsConverter"/>
+        <converters:ListviewFooterHeightConverter x:Key="FooterSizeConverter"/>
+        <converters:IsRefreshingToVisibleConverter x:Key="RefreshingToVisibleConverter"/>
 
     </ContentPage.Resources>
 
-        <xForms:SfListView x:Name="ToDoListView"
-                           ItemsSource="{Binding Todos}"
-                           ItemSpacing="0,0,0,10"
-                           AutoFitMode="None"
-                           DragStartMode="OnHold"
-                           AllowSwiping="True"
-                           SelectionMode="None"
-                           ItemSize="55"
-                           IsStickyFooter="True"
-                           >
+    <xForms:SfListView x:Name="ToDoListView"
+                       ItemsSource="{Binding Todos}"
+                       ItemSpacing="0,0,0,10"
+                       AutoFitMode="None"
+                       DragStartMode="OnHold"
+                       AllowSwiping="True"
+                       SelectionMode="None"
+                       ItemSize="55"
+                       IsStickyFooter="True"
+                       FooterSize="{Binding IsRefreshing, Converter={StaticResource FooterSizeConverter}, ConverterParameter={x:Reference ToDoListView}, Mode=OneWay}"
+                       >
 
-            <xForms:SfListView.Behaviors>
+        <xForms:SfListView.Behaviors>
 
-                <behaviors:EventToCommandBehavior EventName="SwipeEnded"
-                                              Command="{Binding SwipeCommand}"
-                                              EventArgsConverter="{StaticResource SwipeArgsConverter}"/>
+            <behaviors:EventToCommandBehavior EventName="SwipeEnded"
+                                          Command="{Binding SwipeCommand}"
+                                          EventArgsConverter="{StaticResource SwipeArgsConverter}"/>
 
-                <behaviors:EventToCommandBehavior EventName="ItemDragging"
-                                              Command="{Binding DraggingCommand}"
-                                              EventArgsConverter="{StaticResource DraggingArgsConverter}"/>
+            <behaviors:EventToCommandBehavior EventName="ItemDragging"
+                                          Command="{Binding DraggedCommand}"
+                                          EventArgsConverter="{StaticResource DraggedArgsConverter}"/>
 
-            </xForms:SfListView.Behaviors>
+        </xForms:SfListView.Behaviors>
 
-            <xForms:SfListView.Triggers>
+        <xForms:SfListView.LeftSwipeTemplate>
 
-                <DataTrigger TargetType="xForms:SfListView" Binding="{Binding IsRefreshing}" Value="True">
-                    <Setter Property="FooterSize" Value="{Binding Source={x:Reference ToDoListView}, Path=Height}"/>
-                </DataTrigger>
+            <DataTemplate>
 
-            </xForms:SfListView.Triggers>
+                <Grid HorizontalOptions="Fill" VerticalOptions="Fill" BackgroundColor="{StaticResource PrimaryBackgroundColor}">
 
-            <xForms:SfListView.LeftSwipeTemplate>
+                </Grid>
 
-                <DataTemplate>
+            </DataTemplate>
 
-                    <Grid HorizontalOptions="Fill" VerticalOptions="Fill" BackgroundColor="{StaticResource PrimaryBackgroundColor}">
+        </xForms:SfListView.LeftSwipeTemplate>
 
-                    </Grid>
+        <xForms:SfListView.ItemTemplate>
 
-                </DataTemplate>
+            <DataTemplate x:Name="ItemTemp">
 
-            </xForms:SfListView.LeftSwipeTemplate>
+                <Grid Padding="5">
 
-            <xForms:SfListView.ItemTemplate>
+                    <Grid.GestureRecognizers>
 
-                <DataTemplate x:Name="ItemTemp">
-
-                    <Grid Padding="5">
-
-                        <Grid.GestureRecognizers>
-
-                            <TapGestureRecognizer Command="{Binding Source={x:Reference ToDoListView}, Path=BindingContext.ItemTappedCommand}"
+                        <TapGestureRecognizer Command="{Binding Source={x:Reference ToDoListView}, Path=BindingContext.ItemTappedCommand}"
                                                   CommandParameter="{Binding .}"/>
 
-                        </Grid.GestureRecognizers>
+                    </Grid.GestureRecognizers>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
 
-                        <buttons:SfCheckBox x:Name="CheckBox"
+                    <buttons:SfCheckBox x:Name="CheckBox"
                                             Grid.Column="0"
                                             IsChecked="{Binding Complete}"
                                             HorizontalOptions="Fill"
@@ -92,9 +89,9 @@
                                             CheckedColor="{StaticResource ButtonColor}"
                                             />
 
-                        <Frame Grid.Column="1" HasShadow="False" Padding="0" CornerRadius="5" BorderColor="{StaticResource ButtonColor}" BackgroundColor="{StaticResource PrimaryBackgroundColor}">
+                    <Frame Grid.Column="1" HasShadow="False" Padding="0" CornerRadius="5" BorderColor="{StaticResource ButtonColor}" BackgroundColor="{StaticResource PrimaryBackgroundColor}">
 
-                            <Label Text="{Binding Name}"
+                        <Label Text="{Binding Name}"
                                HorizontalTextAlignment="Center"
                                HorizontalOptions="CenterAndExpand"
                                VerticalOptions="Center"
@@ -102,59 +99,43 @@
                                FontSize="19"
                                TextColor="{StaticResource ButtonColor}"
                                InputTransparent="True"/>
-                        </Frame>
+                    </Frame>
 
-                    </Grid>
+                </Grid>
 
-                </DataTemplate>
+            </DataTemplate>
 
-            </xForms:SfListView.ItemTemplate>
+        </xForms:SfListView.ItemTemplate>
+
+        <xForms:SfListView.FooterTemplate>
+
+            <DataTemplate>
+
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*"/>
+                        <ColumnDefinition Width="0.5*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <xForms1:SfBusyIndicator Grid.Column="0" Grid.ColumnSpan="2" IsBusy="{Binding IsRefreshing}" AnimationType="HorizontalPulsingBox"
+                                             HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Scale="1.5"
+                                             Title="Loading.." TextColor="{StaticResource ButtonColor}" TitlePlacement="Bottom"></xForms1:SfBusyIndicator>
 
 
-            <xForms:SfListView.FooterTemplate>
+                    <buttons1:ImageButton Grid.Column="0" Source="{markup:ImageResource add.svg}" WidthRequest="70" HeightRequest="70" CornerRadius="35" HorizontalOptions="CenterAndExpand"
+                                         VerticalOptions="CenterAndExpand" HasShadow="False" Command="{Binding AddNewItemCommand}" IsVisible="{Binding IsRefreshing, Converter={StaticResource RefreshingToVisibleConverter}, Mode=OneWay}">
+                    </buttons1:ImageButton>
 
-                <DataTemplate>
+                    <buttons1:ImageButton Grid.Column="1" Source="{markup:ImageResource save.svg}" WidthRequest="70" HeightRequest="70" CornerRadius="35" HorizontalOptions="CenterAndExpand"
+                                          VerticalOptions="CenterAndExpand" HasShadow="False" Command="{Binding SaveCommand}" IsVisible="{Binding IsRefreshing, Converter={StaticResource RefreshingToVisibleConverter}, Mode=OneWay}">
+                    </buttons1:ImageButton>
 
-                    <Grid>
+                </Grid>
 
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="0.5*"/>
-                            <ColumnDefinition Width="0.5*"/>
-                        </Grid.ColumnDefinitions>
+            </DataTemplate>
 
-                        <xForms1:SfBusyIndicator Grid.Column="0" Grid.ColumnSpan="2" IsBusy="{Binding IsRefreshing}" AnimationType="HorizontalPulsingBox"
-                                                 HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Scale="1.5"
-                                                 Title="Loading.." TextColor="{StaticResource ButtonColor}" TitlePlacement="Bottom"></xForms1:SfBusyIndicator>
-
-                        <Button Grid.Column="0" Text="Add New Item" CornerRadius="5">
-
-                            <Button.Triggers>
-
-                                <DataTrigger TargetType="Button" Binding="{Binding IsRefreshing}" Value="True">
-                                    <Setter Property="IsVisible" Value="False"></Setter>
-                                </DataTrigger>
-
-                            </Button.Triggers>
-
-                        </Button>
-
-                        <Button Grid.Column="1" Text="Save Changes" CornerRadius="5" Command="{Binding SaveCommand}">
-
-                            <Button.Triggers>
-
-                                <DataTrigger TargetType="Button" Binding="{Binding IsRefreshing}" Value="True">
-                                    <Setter Property="IsVisible" Value="False"></Setter>
-                                </DataTrigger>
-
-                            </Button.Triggers>
-
-                        </Button>
-
-                    </Grid>
-
-                </DataTemplate>
-
-            </xForms:SfListView.FooterTemplate>
+        </xForms:SfListView.FooterTemplate>
 
     </xForms:SfListView>
 

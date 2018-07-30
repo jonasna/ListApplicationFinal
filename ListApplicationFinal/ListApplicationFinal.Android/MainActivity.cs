@@ -2,8 +2,11 @@
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
+using Android.Views;
 using FFImageLoading.Forms.Platform;
 using ListApplicationFinal.Droid.CustomRenderers;
+using ListApplicationFinal.Droid.Toast;
+using ListApplicationFinal.Toast;
 using Prism;
 using Prism.Ioc;
 
@@ -12,6 +15,8 @@ namespace ListApplicationFinal.Droid
     [Activity(Label = "List App", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
+        private const int NavBarButtonId = 16908332;
+
         protected override void OnCreate(Bundle bundle)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
@@ -57,7 +62,7 @@ namespace ListApplicationFinal.Droid
     {
         public void RegisterTypes(IContainerRegistry container)
         {
-            // Register any platform specific implementations
+            container.RegisterSingleton<IToastProvider, ToastProvider>();
         }
     }
 

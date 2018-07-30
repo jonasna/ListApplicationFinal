@@ -11,7 +11,7 @@
            CornerRadius="10"
            Padding="5"
            HasShadow="True"
-           BackgroundColor="{markup:ColorResource ResourcePath=PrimaryBackgroundColor}"
+           BackgroundColor="{StaticResource PrimaryBackgroundColor}"
            x:Name="Frame">
 
         <Grid WidthRequest="200" HeightRequest="200">
@@ -28,14 +28,14 @@
                    Grid.Row="0"
                    FontSize="19"
                    FontAttributes="Bold"
-                   TextColor="{markup:ColorResource ResourcePath=ButtonColor}"/>
+                   TextColor="{StaticResource ButtonColor}"/>
 
             <Label Text="{Binding Question}"
                    HorizontalOptions="CenterAndExpand"
                    VerticalOptions="CenterAndExpand"
                    Grid.Row="1"
                    FontSize="16"
-                   TextColor="{markup:ColorResource ResourcePath=ButtonColor}"
+                   TextColor="{StaticResource ButtonColor}"
                    LineBreakMode="CharacterWrap"
                    Margin="8,-15,0,0"/>
 
@@ -54,7 +54,7 @@
                         x:Name="CancelButton"
                         FontSize="16"
                         CornerRadius="10"
-                        BackgroundColor="{markup:ColorResource ResourcePath=ButtonColor}"
+                        BackgroundColor="{StaticResource ButtonColor}"
                         TextColor="White"
                         Clicked="HandleCancelBtnClicked"/>
 
@@ -66,7 +66,7 @@
                         x:Name="AcceptButton"
                         FontSize="16"
                         CornerRadius="10"
-                        BackgroundColor="{markup:ColorResource ResourcePath=ButtonColor}"
+                        BackgroundColor="{StaticResource ButtonColor}"
                         TextColor="White"
                         Clicked="HandleOkBtnClicked"/>
 

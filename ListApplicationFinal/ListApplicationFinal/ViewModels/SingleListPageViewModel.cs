@@ -1,26 +1,34 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using DialogServices.Service;
 using ListApplicationFinal.DataServices;
 using ListApplicationFinal.Domain;
+using ListApplicationFinal.Toast;
 using Prism.Commands;
 using Prism.Navigation;
 
 namespace ListApplicationFinal.ViewModels
 {
-    public interface IDraggingCommandArgs
+    public interface IDraggedCommandArgs
     {
         int NewIndex { get; }
         int OldIndex { get; }
+        bool IsValid { get; }
     }
 
-    public class SingleListPageViewModel : VmBase
+    public class SingleListPageViewModel : VmBase, IConfirmNavigationAsync
     {
         private readonly ITodoStore _todoStore;
+        private readonly IDialogService _dialogService;
+        private readonly IToastProvider _toastProvider;
 
         public SingleListPageViewModel(INavigationService navigationService,
-            ITodoStore todoStore) : base(navigationService)
+            ITodoStore todoStore, IDialogService dialogService, IToastProvider toastProvider) : base(navigationService)
         {
             _todoStore = todoStore;
+            _dialogService = dialogService;
+            _toastProvider = toastProvider;
         }
 
         #region Properties and fields
@@ -41,7 +49,7 @@ namespace ListApplicationFinal.ViewModels
             set => SetProperty(ref _toDos, value);
         }
 
-        private bool _isRefreshing = true;
+        private bool _isRefreshing;
         public bool IsRefreshing
         {
             get => _isRefreshing;
@@ -73,16 +81,17 @@ namespace ListApplicationFinal.ViewModels
             }
         }
 
-        private DelegateCommand<IDraggingCommandArgs> _draggingCommand;
-        public DelegateCommand<IDraggingCommandArgs> DraggingCommand =>
-            _draggingCommand ?? (_draggingCommand = new DelegateCommand<IDraggingCommandArgs>(ExecuteDraggingCommand));
+        private DelegateCommand<IDraggedCommandArgs> _draggedCommand;
+        public DelegateCommand<IDraggedCommandArgs> DraggedCommand =>
+            _draggedCommand ?? (_draggedCommand = new DelegateCommand<IDraggedCommandArgs>(ExecuteDraggedCommand));
 
-        private async void ExecuteDraggingCommand(IDraggingCommandArgs draggingArgs)
+        private async void ExecuteDraggedCommand(IDraggedCommandArgs draggedArgs)
         {
-            if (draggingArgs == null) return;
+            if (!draggedArgs.IsValid || draggedArgs.NewIndex == draggedArgs.OldIndex) return;
 
-            await Task.Delay(100); // If this is not here the visual list will not be updated correctly
-            Todos.Move(draggingArgs.OldIndex, draggingArgs.NewIndex);
+            await Task.Delay(100); // This is needed for updating the visual list
+
+            Todos.Move(draggedArgs.OldIndex, draggedArgs.NewIndex);
             ChangeMade = true;
         }
 
@@ -94,10 +103,26 @@ namespace ListApplicationFinal.ViewModels
         {
             List.ItemCollection = Todos;
             await _todoStore.UpdateListAsync(List.Id, List);
+            _toastProvider.ShortMessage("Changes was saved!");
             ChangeMade = false;
         }
 
         private bool CanExecuteSaveCommand() => ChangeMade;
+
+        private DelegateCommand _addNewItemCommand;
+        public DelegateCommand AddNewItemCommand =>
+            _addNewItemCommand ?? (_addNewItemCommand = new DelegateCommand(ExecuteAddNewItemCommand));
+
+        private async void ExecuteAddNewItemCommand()
+        {
+            var newItemName = await _dialogService.StringQueryDialog("Add a to-do");
+            if (newItemName != null)
+            {
+                var item = new TodoItemDto {Name = newItemName};
+                Todos.Add(item);
+                ChangeMade = true;
+            }
+        }
 
         #region Initialization
 
@@ -106,6 +131,7 @@ namespace ListApplicationFinal.ViewModels
             if (parameters.TryGetValue(KnownNavigationParameters.XamlParam, out ITodoList todo))
             {
                 List = todo;
+                IsRefreshing = true;
             }
         }
 
@@ -124,11 +150,34 @@ namespace ListApplicationFinal.ViewModels
             List = await _todoStore.GetListAsync(List.Id);
             Todos = new ObservableCollection<ITodo>(List.ItemCollection);
 
-            await Task.Delay(100); // For testing purposes
+            var delay = new Random().Next(5001);
+            await Task.Delay(delay); // For testing purposes
+
             IsRefreshing = false;
             ChangeMade = false;
         }
 
         #endregion
+
+        public async Task<bool> CanNavigateAsync(INavigationParameters parameters)
+        {
+            if (!ChangeMade) return true;
+
+            if (await _dialogService.QuestionDialog("Continue? Changes will be lost.",
+                "Unsaved changes!"))
+                return true;
+
+            return false;
+        }
+
+        public async void NavigateBack()
+        {
+            await NavigationService.GoBackAsync();
+        }
+
+        public void NotifyRefresh()
+        {
+            RaisePropertyChanged(nameof(IsRefreshing));
+        }
     }
 }
